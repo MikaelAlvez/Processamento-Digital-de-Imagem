@@ -3,49 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Implementação - PDI</title>
 
     <style type="text/css">
-        body{
-            background-color: #CCCCCC;
-            align-items: center;
-        }
-        #fundo{
-            background-color: #778899;
-            text-align: center;
-            padding: 20px;
-        }
-        #operacoes{
-            background-color: #CCCCCC;
-            align-items: center;
-        }
-        .subop{
-            background-color: red;
-            width: 10%;
-            padding: 10px;
-            text-align: center;
-        }
+    body{
+        background-color: #CCCCCC;
+        align-items: center;
+    }
+    #fundo{
+        background-color: #778899;
+        text-align: center;
+        padding: 20px;
+    }
+    #operacoes{
+        background-color: #CCCCCC;
+        align-items: center;
+        padding: 10px;
+        margin: 20px;
+        border-radius: 25px;
+    }
+
+    .subop{
+        background-color: #CCCCCC;
+        width: 5%px;
+        height: 20px;
+        display: inline-block;
+        padding: 25px;
+        margin: 10px;
+        border-style: solid;
+        border-radius: 10px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .subop:hover {
+    color: white;
+    background: #778899;
+    }
+
+    #picture__input {
+    display: none;
+    cursor: pointer;
+    }
+
+    .picture {
+    width: 400px;
+    display: inline-block;
+    aspect-ratio: 16/9;
+    background: #ddd;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    border: 2px dashed currentcolor;
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: color 300ms ease-in-out, background 300ms ease-in-out;
+    outline: none;
+    overflow: hidden;
+    background-color: #778899;
+    padding: 70px 120px;
+    margin: 10px;
+    border-radius: 10px;
+    }
+
+    .picture:hover {
+    color: #777;
+    background: #ccc;
+    }
+
+    .picture:active {
+    border-color: turquoise;
+    color: turquoise;
+    background: #eee;
+    }
+
+    .picture:focus {
+    color: #777;
+    background: #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .picture__img {
+    max-width: 100%;
+    }
+
+    button{
+        background-color: #CCCCCC;
+        width: 12%;
+        height: 70px;
+        font-size: 25px;
+        border: 3.2px;
+        border-style: solid;
+        border-color: black;
+        border-radius: 10px;
+    }
+
+    button:hover {
+    color: white;
+    background: #778899;
+    border-color: white;
+    }
     </style>
-        
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputFile = document.querySelectorAll(".picture__input");
+            const pictureImage = document.querySelectorAll(".picture__image");
+            const clearButton = document.querySelector("#clear-button");
+            const resultDiv = document.querySelector(".result-image");
+            const resultImg = resultDiv.querySelector(".result-img");
+
+            const pictureImageTxt = "Choose an image";
+
+            let image1Data = null;
+            let image2Data = null;
+            let sumImageData = null; // Armazenar a imagem resultante da soma
+
+            for (let i = 0; i < inputFile.length; i++) {
+                pictureImage[i].innerHTML = pictureImageTxt;
+
+                inputFile[i].addEventListener("change", function (e) {
+                    const inputTarget = e.target;
+                    const file = inputTarget.files[0];
+
+                    if (file) {
+                        const reader = new FileReader();
+
+                        reader.addEventListener("load", function (e) {
+                            const readerTarget = e.target;
+
+                            const img = document.createElement("img");
+                            img.src = readerTarget.result;
+                            img.alt = "Uploaded Image"; // Adicionado atributo alt para acessibilidade
+                            img.classList.add("picture__img");
+
+                            pictureImage[i].innerHTML = "";
+                            pictureImage[i].appendChild(img);
+
+                            if (i === 0) {
+                                image1Data = readerTarget.result;
+                            } else if (i === 1) {
+                                image2Data = readerTarget.result;
+                            }
+                        });
+
+                        reader.readAsDataURL(file);
+                    } else {
+                        pictureImage[i].innerHTML = pictureImageTxt;
+                        if (i === 0) {
+                            image1Data = null;
+                        } else if (i === 1) {
+                            image2Data = null;
+                        }
+                    }
+                });
+            }
+
+            clearButton.addEventListener("click", function () {
+                for (let i = 0; i < pictureImage.length; i++) {
+                    pictureImage[i].innerHTML = pictureImageTxt;
+                    if (i === 0) {
+                        image1Data = null;
+                    } else if (i === 1) {
+                        image2Data = null;
+                    }
+                }
+                resultDiv.style.display = "none";
+                resultImg.src = "";
+                sumImageData = null; // Limpar a imagem resultante da soma
+            });
+
+            // Função para realizar a soma e armazenar a imagem resultante
+            function performSum() {
+                if (image1Data && image2Data) {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+                    const img1 = new Image();
+                    const img2 = new Image();
+
+                    img1.src = image1Data;
+                    img2.src = image2Data;
+
+                    img1.onload = function () {
+                        canvas.width = img1.width;
+                        canvas.height = img1.height;
+
+                        ctx.drawImage(img1, 0, 0);
+
+                        img2.onload = function () {
+                            ctx.globalAlpha = 0.5; // Definir a opacidade para realizar a soma
+                            ctx.drawImage(img2, 0, 0);
+
+                            sumImageData = canvas.toDataURL(); // Armazenar a imagem resultante da soma
+                            resultImg.src = sumImageData;
+                            resultDiv.style.display = "block";
+                        };
+                    };
+                }
+            }
+
+            // Função para realizar a subtração e exibir a nova imagem resultante
+            function performSubtraction() {
+                if (image1Data && image2Data) {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+                    const img1 = new Image();
+                    const img2 = new Image();
+
+                    img1.src = sumImageData || image1Data; // Usar a imagem resultante da soma, se disponível
+                    img2.src = image2Data;
+
+                    img1.onload = function () {
+                        canvas.width = img1.width;
+                        canvas.height = img1.height;
+
+                        ctx.drawImage(img1, 0, 0);
+
+                        img2.onload = function () {
+                            ctx.globalCompositeOperation = "difference"; // Definir a operação de subtração
+                            ctx.drawImage(img2, 0, 0);
+
+                            resultImg.src = canvas.toDataURL();
+                            resultDiv.style.display = "block";
+                        };
+                    };
+                }
+            }
+
+            // Chamar a função de soma ao clicar na div de soma
+            const sumButton = document.querySelector(".subop.sum"); // Alterado para ".subop.sum"
+            sumButton.addEventListener("click", performSum);
+
+            // Chamar a função de subtração ao clicar na div de subtração
+            const subtractionButton = document.querySelector(".subop.sub");
+            subtractionButton.addEventListener("click", performSubtraction);
+        });
+    </script>
+
 </head>
 <body>
     <div id="fundo">
-        <div>
-            <h1>Faça upload da <br/> imagem 1</h1>
+        <label class="picture" tabindex="0">
+            <input type="file" accept="image/*" class="picture__input"/>
+            <span class="picture__image"></span>
+        </label>
+          
+        <label class="picture" tabindex="1">
+            <input type="file" accept="image/*" class="picture__input"/>
+            <span class="picture__image"></span>
+        </label>
+
+        <div class="result-image">
+            <img class="result-img" src="#" alt=" " />
         </div>
-        <div>
-            <h1>Faça upload da <br/> imagem 2</h1>
-        </div>
-        <div>
-            <h2>Resultado da operação</h2>
-        </div>
+        
+        <button id="clear-button">CLEAR</button>
+
         <div id="operacoes">
-            <div class="subop">SUM</div>
-            <div class="subop">SUBTR</div>
-            <div class="subop">MULT</div>
-            <div class="subop">AND</div>
-            <div class="subop">OR</div>
-            <div class="subop">XOR</div>
+            <div class="subop sum">SUM</div>
+            <div class="subop sub">SUBTR</div>
+            <div class="subop mult">MULT</div>
+            <div class="subop and">AND</div>
+            <div class="subop or">OR</div>
+            <div class="subop xor">XOR</div>
             <div class="subop">ROTAÇÃO</div>
             <div class="subop">TRANSLAÇÃO</div>
             <div class="subop">ESCALA</div>
