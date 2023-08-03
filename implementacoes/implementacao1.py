@@ -60,7 +60,7 @@ def logical_or(img1, img2):
 def logical_xor(img1,img2):
     return cv.bitwise_xor(img1,img2)
 
-img = cv.imread(cv.samples.findFile("/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"))
+img = cv.imread(cv.samples.findFile("implementacoes\images\lena.pgm"))
 if img is None:
     sys.exit("Could not read the image.")
 imgGray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -75,7 +75,7 @@ imgMul = mul(img1,2)
 imgDiv = div(img1,2)
 #cv.imshow("Img1", img1)
 #cv.imshow("Img2", img2)
-#cv.imshow("ImgSoma", imgSoma)
+cv.imshow("ImgSoma", imgSoma)
 #cv.imshow("ImgSub", imgSub)
-#cv.waitKey()
-#cv.destroyAllWindows()
+cv.waitKey()
+cv.destroyAllWindows()
