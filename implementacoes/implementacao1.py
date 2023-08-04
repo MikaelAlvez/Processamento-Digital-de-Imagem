@@ -15,8 +15,10 @@ def soma(img1, img2):
             for y in range(largura):
                 a = 255 / (maior_valor - menor_valor)
                 b = -a * menor_valor
-    return resultado
-def sub(img1,img2):
+    return resultado.astype('uint8')
+
+
+def sub(img1, img2):
     altura, largura = img1.shape
     imgSub = np.subtract(img1, img2, dtype='int32')
     maior_valor = max(max(linha) for linha in imgSub)
@@ -27,9 +29,11 @@ def sub(img1,img2):
             for y in range(largura):
                 a = 255 / (maior_valor - menor_valor)
                 b = -a * menor_valor
-                resultado[y, x] = round(a * imgSub[y,x] + b)
-    return resultado
-def div(img1,img2):
+                resultado[y, x] = round(a * imgSub[y, x] + b)
+    return resultado.astype('uint8')
+
+
+def div(img1, img2):
     altura, largura = img1.shape
     imgDiv = np.divide(img1, img2, dtype='float')
     maior_valor = max(max(linha) for linha in imgDiv)
@@ -37,9 +41,11 @@ def div(img1,img2):
     resultado = np.copy(imgDiv).astype('uint8')
     for x in range(altura):
         for y in range(largura):
-            resultado[y, x] = round(imgDiv[y,x])
-    return resultado
-def mul(img1,img2):
+            resultado[y, x] = round(imgDiv[y, x])
+    return resultado.astype('uint8')
+
+
+def mul(img1, img2):
     altura, largura = img1.shape
     imgMul = np.multiply(img1, img2, dtype='int32')
     maior_valor = max(max(linha) for linha in imgMul)
@@ -50,32 +56,32 @@ def mul(img1,img2):
             for y in range(largura):
                 a = 255 / (maior_valor - menor_valor)
                 b = -a * menor_valor
-                resultado[y, x] = round(a * imgMul[y,x] + b)
-    return resultado
+                resultado[y, x] = round(a * imgMul[y, x] + b)
+    return resultado.astype('uint8')
 
-def logical_and(img1,img2):
-    return cv.bitwise_and(img1,img2)
+
+def logical_and(img1, img2):
+    return cv.bitwise_and(img1, img2)
+
+
 def logical_or(img1, img2):
-    return cv.bitwise_or(img1,img2)
-def logical_xor(img1,img2):
-    return cv.bitwise_xor(img1,img2)
+    return cv.bitwise_or(img1, img2)
 
-img = cv.imread(cv.samples.findFile("implementacoes\images\lena.pgm"))
+
+def logical_xor(img1, img2):
+    return cv.bitwise_xor(img1, img2)
+
+
+img = cv.imread(cv.samples.findFile(
+    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+img2 = cv.imread(cv.samples.findFile(
+    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/caman.tif"), cv.IMREAD_UNCHANGED)
 if img is None:
     sys.exit("Could not read the image.")
-imgGray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-
-img1 = np.array([[132,120,138],[84,110,200],[255,92,177]])
-img2 = np.array([[152,92,107],[80,124,210],[230,100,164]])
-img4 = np.array([[100,220,230],[45,95,120],[205,100,0]])
-img3 = np.array([[200,100,100],[0,10,50],[50,250,120]])
-imgSub = sub(img1, img2)
-imgSoma = soma(img3, img4)
-imgMul = mul(img1,2)
-imgDiv = div(img1,2)
-#cv.imshow("Img1", img1)
-#cv.imshow("Img2", img2)
-cv.imshow("ImgSoma", imgSoma)
-#cv.imshow("ImgSub", imgSub)
+print(img[0][0])
+print(img2[0][0])
+imgSoma = soma(img, img2)
+print(imgSoma[0][0])
+cv.imshow('and', soma(img, img2))
 cv.waitKey()
 cv.destroyAllWindows()
