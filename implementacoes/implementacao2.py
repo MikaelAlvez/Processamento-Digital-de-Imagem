@@ -163,68 +163,6 @@ def perform_shear(image):
     cv2.destroyAllWindows()
     return cv2.warpAffine(image, np.float32([[1, dx / image.shape[0], 0], [dy / image.shape[1], 1, 0]]), (image.shape[1], image.shape[0]))
 
-# ----- ZOOM IN COM INTERPOLAÇÃO -----
-def perform_zoom_in_interpolation(image):
-    altura, largura = image.shape[:2]
-    centro_x, centro_y = largura // 2, altura // 2
-
-    scale_factor = 1.5
-    nova_altura = int(altura * scale_factor)
-    nova_largura = int(largura * scale_factor)
-
-    deslocamento_x = centro_x - nova_largura // 2
-    deslocamento_y = centro_y - nova_altura // 2
-
-    zoomed_in = cv2.resize(image, (nova_largura, nova_altura), interpolation=cv2.INTER_LINEAR)
-    zoomed_in = zoomed_in[deslocamento_y:deslocamento_y+altura, deslocamento_x:deslocamento_x+largura]
-    return zoomed_in
-
-# ----- ZOOM IN COM REPLICAÇÃO -----
-def perform_zoom_in_replication(image, scale_factor):
-    zoom_factor = 1.1 ** scale_factor
-
-    # Dimensões da imagem original
-    altura, largura = image.shape[:2]
-
-    # Novas dimensões após o zoom in
-    nova_altura = int(altura * zoom_factor)
-    nova_largura = int(largura * zoom_factor)
-
-    # Criar uma matriz vazia para a imagem ampliada
-    zoomed_in = np.zeros((nova_altura, nova_largura, 3), dtype=np.uint8)
-
-    # Preencher a matriz com os valores replicados da imagem original
-    for i in range(nova_altura):
-        for j in range(nova_largura):
-            y = min(int(i / zoom_factor), altura - 1)
-            x = min(int(j / zoom_factor), largura - 1)
-            zoomed_in[i, j] = image[y, x]
-
-    return zoomed_in
-
-# Carregar a imagem
-imagem = cv2.imread("implementacoes/images/lena.pgm")
-
-# Exibir a imagem original
-cv2.imshow("Zoom In", imagem)
-
-scale_factor = 0  # Inicializar o fator de escala
-
-def onMouse(event, x, y, flags, param):
-    global scale_factor, imagem
-    if event == cv2.EVENT_LBUTTONDBLCLK:
-        scale_factor += 1
-        zoomed_image = perform_zoom_in_replication(imagem, scale_factor)
-        cv2.imshow("Zoom In", zoomed_image)
-
-cv2.setMouseCallback("Zoom In", onMouse)
-
-while True:
-    key = cv2.waitKey(1)
-
-    if key == 27:  # Tecla ESC para sair
-        break
-
 # Carregar a imagem
 imagem = cv2.imread("implementacoes/images/lena.pgm")
 
