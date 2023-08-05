@@ -168,7 +168,7 @@ imagem = cv2.imread("implementacoes/images/lena.pgm")
 
 while True:
     print("Escolha uma operação:")
-    print("1. Translação (deslocamento)")
+    print("1. Translação")
     print("2. Rotação")
     print("3. Escala")
     print("4. Reflexão")
