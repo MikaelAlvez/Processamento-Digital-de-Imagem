@@ -15,10 +15,8 @@ def perform_zoom_in_interpolation(image, x, y, scale_factor):
     zoomed_in = zoomed_in[deslocamento_y:deslocamento_y+altura, deslocamento_x:deslocamento_x+largura]
     return zoomed_in
 
-# Carregar a imagem
 imagem = cv2.imread("implementacoes/images/lena.pgm")
 
-# Exibir a imagem original
 cv2.imshow("Zoom In - Interpolacao", imagem)
 
 scale_factor = 1.0
@@ -48,7 +46,6 @@ cv2.destroyAllWindows()
 
 # ----- ZOOM IN COM REPLICAÇÃO -----
 
-# Exibir a imagem original
 cv2.imshow("Zoom In - Replicacao", imagem)
 
 scale_factor = 1.0
@@ -68,10 +65,10 @@ cv2.setMouseCallback("Zoom In - Replicacao", onMouse)
 while True:
     key = cv2.waitKey(1)
 
-    if key == 27:  # Tecla ESC para sair
+    if key == 27:
         break
 
-    # ----- ZOOM OUT COM EXCLUSÃO -----
+# ----- ZOOM OUT COM EXCLUSÃO -----
 def perform_zoom_out_exclusion(image, x, y):
     altura, largura = image.shape[:2]
 
@@ -87,10 +84,8 @@ def perform_zoom_out_exclusion(image, x, y):
     result[deslocamento_y:deslocamento_y+nova_altura, deslocamento_x:deslocamento_x+nova_largura] = zoomed_out
     return result
 
-# Carregar a imagem
 imagem = cv2.imread("implementacoes/images/lena.pgm")
 
-# Exibir a imagem original
 cv2.imshow("Zoom Out - Exclusao", imagem)
 
 clicks = 0
@@ -115,10 +110,10 @@ cv2.setMouseCallback("Zoom Out - Exclusao", onMouse)
 while True:
     key = cv2.waitKey(1)
 
-    if key == 27:  # Tecla ESC para sair
+    if key == 27: 
         break
 
-    # ----- ZOOM OUT COM VALOR-MÉDIO -----
+# ----- ZOOM OUT COM VALOR-MÉDIO -----
 def perform_zoom_out_mean(image, x, y):
     altura, largura = image.shape[:2]
 
@@ -133,17 +128,15 @@ def perform_zoom_out_mean(image, x, y):
     result = image.copy()
     result[deslocamento_y:deslocamento_y+nova_altura, deslocamento_x:deslocamento_x+nova_largura] = zoomed_out
 
-    # Calcular a média dos pixels na área de zoom out
+# Calcular a média dos pixels na área de zoom out
     for i in range(deslocamento_y, deslocamento_y+nova_altura):
         for j in range(deslocamento_x, deslocamento_x+nova_largura):
             result[i, j] = np.mean(result[i, j])
 
     return result
 
-# Carregar a imagem
 imagem = cv2.imread("implementacoes/images/lena.pgm")
 
-# Exibir a imagem original
 cv2.imshow("Zoom Out (Valor-Médio)", imagem)
 
 clicks = 0
@@ -168,7 +161,7 @@ cv2.setMouseCallback("Zoom Out (Valor-Médio)", onMouse)
 while True:
     key = cv2.waitKey(1)
 
-    if key == 27:  # Tecla ESC para sair
+    if key == 27: 
         break
 
 cv2.destroyAllWindows()
