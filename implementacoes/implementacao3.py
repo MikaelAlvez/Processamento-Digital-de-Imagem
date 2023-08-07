@@ -43,28 +43,33 @@ def decompor(img):
         cv.destroyAllWindows()
 
 
-def bgr_to_cmyk(b, g, r):
+def bgr_to_cmyk(img):
     RGB_SCALE = 255
     CMYK_SCALE = 100
-
-    if (r, g, b) == (0, 0, 0):
-        # black
-        return 0, 0, 0, CMYK_SCALE
-
-    # rgb [0,255] -> cmy [0,1]
-    c = 1 - r / RGB_SCALE
-    m = 1 - g / RGB_SCALE
-    y = 1 - b / RGB_SCALE
-
-    # extract out k [0, 1]
-    min_cmy = min(c, m, y)
-    c = (c - min_cmy) / (1 - min_cmy)
-    m = (m - min_cmy) / (1 - min_cmy)
-    y = (y - min_cmy) / (1 - min_cmy)
-    k = min_cmy
-
-    # rescale to the range [0,CMYK_SCALE]
-    return c * CMYK_SCALE, m * CMYK_SCALE, y * CMYK_SCALE, k * CMYK_SCALE
+    altura, largura, bands = img.shape
+    resultado = np.zeros((altura, largura, 4), dtype=np.uint8)
+    for x in range(altura):
+        for y in range(largura):
+            r = img[y, x, 2]
+            g = img[y, x, 1]
+            b = img[y, x, 0]
+            if (r, g, b) == (0, 0, 0):
+                # black
+                resultado[y, x] = [0, 0, 0, CMYK_SCALE]
+            # rgb [0,255] -> cmy [0,1]
+            C = 1 - r / RGB_SCALE
+            M = 1 - g / RGB_SCALE
+            Y = 1 - b / RGB_SCALE
+            # extract out k [0, 1]
+            min_cmy = min(C, M, Y)
+            C = (C - min_cmy) / (1 - min_cmy)
+            M = (M - min_cmy) / (1 - min_cmy)
+            Y = (Y - min_cmy) / (1 - min_cmy)
+            K = min_cmy
+            resultado[y, x] = [round(
+                C * CMYK_SCALE), round(M * CMYK_SCALE), round(Y * CMYK_SCALE), round(K * CMYK_SCALE)]
+            # rescale to the range [0,CMYK_SCALE]
+    return resultado
 
 
 def cvtBGR2CMYK(path):
@@ -98,7 +103,9 @@ img = cv.imread(path)  # IMREAD_UNCHANGED
 if img is None:
     sys.exit("Could not read the image.")
 h, w, channels = img.shape
-print(img[0][0])
+# cmyk_1 = bgr_to_cmyk(img)
+# cv.imshow('aaaa', cmyk_1)
+# cv.waitKey(0)
 if (channels == 1):
     cv.imshow("Imagem com só um componente", img)
     cv.waitKey()
