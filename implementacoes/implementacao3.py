@@ -1,6 +1,7 @@
 import cv2 as cv
 import sys
 import numpy as np
+from PIL import Image
 
 
 def decompor(img):
@@ -33,33 +34,67 @@ def decompor(img):
         first[:, :, 0] = img[:, :, 0]
         second[:, :, 1] = img[:, :, 1]
         third[:, :, 2] = img[:, :, 2]
-        fourth[:, :, 2] = img[:, :, 2]
+        fourth[:, :, 3] = img[:, :, 3]
         cv.imshow("first", first)
         cv.imshow("second", second)
-        cv.imshow("fourth", fourth)
         cv.imshow("third", third)
+        cv.imshow("fourth", fourth)
         cv.waitKey(10000)
         cv.destroyAllWindows()
 
 
-def cvtBGR2CMYK(img):
-    bgrdash = img.astype(np.float64)/255
+def bgr_to_cmyk(img):
+    RGB_SCALE = 255
+    CMYK_SCALE = 100
+    altura, largura, bands = img.shape
+    resultado = np.zeros((altura, largura, 4), dtype=np.uint8)
+    for x in range(altura):
+        for y in range(largura):
+            r = img[y, x, 2]
+            g = img[y, x, 1]
+            b = img[y, x, 0]
+            if (r, g, b) == (0, 0, 0):
+                # black
+                resultado[y, x] = [0, 0, 0, CMYK_SCALE]
+            # rgb [0,255] -> cmy [0,1]
+            C = 1 - r / RGB_SCALE
+            M = 1 - g / RGB_SCALE
+            Y = 1 - b / RGB_SCALE
+            # extract out k [0, 1]
+            min_cmy = min(C, M, Y)
+            C = (C - min_cmy) / (1 - min_cmy)
+            M = (M - min_cmy) / (1 - min_cmy)
+            Y = (Y - min_cmy) / (1 - min_cmy)
+            K = min_cmy
+            resultado[y, x] = [round(
+                C * CMYK_SCALE), round(M * CMYK_SCALE), round(Y * CMYK_SCALE), round(K * CMYK_SCALE)]
+            # rescale to the range [0,CMYK_SCALE]
+    return resultado
 
-    # Calculate K as (1 - whatever is biggest out of Rdash, Gdash, Bdash)
-    K = 1 - np.max(bgrdash, axis=2)
 
-    # Calculate C
-    C = (1-bgrdash[..., 2] - K)/(1-K)
-
-    # Calculate M
-    M = (1-bgrdash[..., 1] - K)/(1-K)
-
-    # Calculate Y
-    Y = (1-bgrdash[..., 0] - K)/(1-K)
-
-    # Combine 4 channels into single image and re-scale back up to uint8
-    CMYK = (np.dstack((C, M, Y, K)) * 255).astype(np.uint8)
-    return CMYK
+def cvtBGR2CMYK(path):
+    image = Image.open(
+        path)
+    cmyk_image = image.convert('CMYK')
+    bands = Image.Image.split(cmyk_image)
+    arr = np.array(cmyk_image).astype('uint8')
+    C = np.zeros_like(arr)
+    C[:, :, 0] = np.array(bands[0]).astype('uint8')
+    M = np.zeros_like(arr)
+    M[:, :, 1] = np.array(bands[1]).astype('uint8')
+    Y = np.zeros_like(arr)
+    Y[:, :, 2] = np.array(bands[2]).astype('uint8')
+    K = np.zeros_like(arr)
+    K[:, :, 3] = np.array(bands[3]).astype('uint8')
+    print(arr[0][0])
+    cv.imshow('cmyk', arr)
+    # cv.imshow('C', C)
+    # cv.imshow('M', M)
+    # cv.imshow('Y', Y)
+    # cv.imshow('K', K)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+    return arr
 
 
 path = cv.samples.findFile(
@@ -68,6 +103,9 @@ img = cv.imread(path)  # IMREAD_UNCHANGED
 if img is None:
     sys.exit("Could not read the image.")
 h, w, channels = img.shape
+# cmyk_1 = bgr_to_cmyk(img)
+# cv.imshow('aaaa', cmyk_1)
+# cv.waitKey(0)
 if (channels == 1):
     cv.imshow("Imagem com só um componente", img)
     cv.waitKey()
@@ -83,17 +121,15 @@ elif (channels == 3):
     # converter
     hsb = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     yuv = cv.cvtColor(img, cv.COLOR_BGR2YUV)
-    cmyk = cvtBGR2CMYK(img)
-    print(cmyk[0][0], img[0][0])
-    # print(hsb[0, 0], yuv[0, 0], cmyk[0, 0])
-    # cv.imshow("BGR para HSB", hsb)
-    # decompor(hsb)
-    # cv.waitKey(10000)
-    # cv.destroyAllWindows()
-    # cv.imshow("BGR para YUV", yuv)
-    # decompor(yuv)
+    cmyk = cvtBGR2CMYK(path)
+    cv.imshow("BGR para HSB", hsb)
+    decompor(hsb)
     cv.imshow("BGR para CMYK", cmyk)
     decompor(cmyk)
+    # cv.waitKey(10000)
+    # cv.destroyAllWindows()
+    cv.imshow("BGR para YUV", yuv)
+    decompor(yuv)
     # cv.waitKey()
     # cv.destroyAllWindows()
 else:

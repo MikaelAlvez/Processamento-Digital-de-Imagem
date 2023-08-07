@@ -42,12 +42,15 @@ def div(img1, img2):
     for x in range(altura):
         for y in range(largura):
             resultado[y, x] = round(imgDiv[y, x])
-    return resultado.astype('uint8')
+    return resultado
 
 
 def mul(img1, img2):
     altura, largura = img1.shape
-    imgMul = np.multiply(img1, img2, dtype='int32')
+    img1 = img1.astype('int32')
+    img2 = img2.astype('int32')
+    imgMul = img1 * img2
+    print(imgMul[0][0])
     maior_valor = max(max(linha) for linha in imgMul)
     menor_valor = min(min(linha) for linha in imgMul)
     resultado = np.copy(imgMul)
@@ -77,11 +80,23 @@ img = cv.imread(cv.samples.findFile(
 img2 = cv.imread(cv.samples.findFile(
     "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/caman.tif"), cv.IMREAD_UNCHANGED)
 if img is None:
-    sys.exit("Could not read the image.")
+    sys.exit("Could not read the image 1.")
+if img2 is None:
+    sys.exit("Could not read the image 2.")
 print(img[0][0])
 print(img2[0][0])
 imgSoma = soma(img, img2)
 print(imgSoma[0][0])
-cv.imshow('and', soma(img, img2))
+cv.imshow('soma', soma(img, img2))
+multiplicador = np.array([3])
+imgMul = mul(img, multiplicador)
+cv.imshow('mul', imgMul)
+divisor = np.array([3])
+cv.imshow('div', div(img, divisor))
+cv.imshow('original', img)
+print(imgMul[0][0], img[0][0])
+cv.imshow('and', logical_and(img, img2))
+cv.imshow('or', logical_or(img, img2))
+cv.imshow('xor', logical_xor(img, img2))
 cv.waitKey()
 cv.destroyAllWindows()
