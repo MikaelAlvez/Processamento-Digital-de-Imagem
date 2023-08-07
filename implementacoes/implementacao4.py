@@ -22,7 +22,7 @@ def redistribuicao(img):
     img_redistribuida = np.copy(img)
     for x in range(altura):
         for y in range(largura):
-            if (img[y, x, 2] >= 150 and img[y, x, 1] < 60):
+            if (img[y, x, 2] >= 150):
                 img_redistribuida[y, x, 2] = 255
     return img_redistribuida
 
