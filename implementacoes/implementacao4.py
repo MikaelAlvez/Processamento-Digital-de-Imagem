@@ -22,20 +22,22 @@ def redistribuicao(img):
     img_redistribuida = np.copy(img)
     for x in range(altura):
         for y in range(largura):
-            if (img[y, x, 2] >= 150):
+            if (img[y, x, 2] >= 150 and img[y, x, 1] >= 80):
                 img_redistribuida[y, x, 2] = 255
+                img_redistribuida[y, x, 1] = 80
     return img_redistribuida
 
 
 path = cv.samples.findFile(
+
     "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm")
 path_colorido = cv.samples.findFile(
     "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg")
 img = cv.imread(path, cv.IMREAD_UNCHANGED)  # IMREAD_UNCHANGED
 img_colorida = cv.imread(
     path_colorido, cv.IMREAD_UNCHANGED)  # IMREAD_UNCHANGED
-# cv.imshow("fatiamento", fatiamento(img))
-# cv.imshow("original", img)
+cv.imshow("fatiamento", fatiamento(img))
+cv.imshow("original cinza", img)
 cv.imshow('original colorida', img_colorida)
 cv.imshow("redistribuida", redistribuicao(img_colorida))
 cv.waitKey(100000)
