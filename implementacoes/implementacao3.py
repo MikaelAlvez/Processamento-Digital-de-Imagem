@@ -121,7 +121,9 @@ elif (channels == 3):
     # converter
     hsb = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     yuv = cv.cvtColor(img, cv.COLOR_BGR2YUV)
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     cmyk = cvtBGR2CMYK(path)
+    cv.imshow("BGR para Gray", gray)
     cv.imshow("BGR para HSB", hsb)
     decompor(hsb)
     cv.imshow("BGR para CMYK", cmyk)
