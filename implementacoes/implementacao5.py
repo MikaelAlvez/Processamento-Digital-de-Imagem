@@ -11,6 +11,7 @@ def linear_transformation(image_path):
         # Definir o intervalo desejado para a nova imagem (Gmin, Gmax)
         Gmin = 50
         Gmax = 200
+        
 
         # Obter os valores mínimos e máximos da imagem original
         Fmin = np.min(image)

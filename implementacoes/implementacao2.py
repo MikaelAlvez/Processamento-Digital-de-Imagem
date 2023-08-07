@@ -57,8 +57,8 @@ def perform_rotation(image):
             dragging = False
 
     def rotate_image(image, angle):
-        centro = (0, 0)
-        rotacao = cv2.getRotationMatrix2D(centro, angle, 1.0)
+        inicial = (0, 0)
+        rotacao = cv2.getRotationMatrix2D(inicial, angle, 1.0)
         rotacionado = cv2.warpAffine(image, rotacao, (image.shape[1], image.shape[0]), flags=cv2.INTER_LINEAR)
         return rotacionado
 
