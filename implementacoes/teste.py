@@ -1,28 +1,26 @@
-import cv2
+import cv2 as cv
 import numpy as np
+from PIL import Image
 
-# Carregar a imagem em tons de cinza
-gray_image = cv2.imread('implementacoes\images\imageteste.jpg', cv2.IMREAD_GRAYSCALE)
+bgr = cv.imread('implementacoes/images/lena_cor.jpg')
+# Make float and divide by 255 to give BGRdash
+bgrdash = bgr.astype(np.float64)/255
 
-# Aplicar um mapa de cores (colormap) para a pseudocolorização
-colored_image = cv2.applyColorMap(gray_image, cv2.COLORMAP_JET)
+# Calculate K as (1 - whatever is biggest out of Rdash, Gdash, Bdash)
+K = 1 - np.max(bgrdash, axis=2)
 
-# Mostrar a imagem pseudocolorizada
-cv2.imshow('Pseudocolorizada', colored_image)
-cv2.waitKey(0)
+# Calculate C
+C = (1-bgrdash[..., 2] - K)/(1-K)
 
-# Carregar a imagem colorida
-color_image = cv2.imread('implementacoes\images\imageteste.jpg')
+# Calculate M
+M = (1-bgrdash[..., 1] - K)/(1-K)
 
-# Converter a imagem para escala de cinza
-gray_image = cv2.cvtColor(color_image, cv2.COLOR_BGR2GRAY)
+# Calculate Y
+Y = (1-bgrdash[..., 0] - K)/(1-K)
 
-# Aplicar um mapa de cores (colormap) para a pseudocolorização
-colored_image = cv2.applyColorMap(gray_image, cv2.COLORMAP_HOT)
-
-# Mostrar a imagem colorida e pseudocolorizada lado a lado
-stacked_image = np.hstack((color_image, colored_image))
-cv2.imshow('Original vs Pseudocolorizada', stacked_image)
-cv2.waitKey(0)
-
-cv2.destroyAllWindows()
+# Combine 4 channels into single image and re-scale back up to uint8
+CMYK = (np.dstack((C, M, Y, K)) * 255).astype(np.uint8)
+cv.imshow("aa", bgr)
+cv.imshow('bb', CMYK)
+cv.imwrite('cmyk.jpg', CMYK)
+cv.waitKey(0)
