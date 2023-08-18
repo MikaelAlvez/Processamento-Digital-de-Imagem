@@ -1,145 +1,85 @@
 import cv2 as cv
 import sys
 import numpy as np
-from PIL import Image
 
-
-def decompor(img):
-    h, w, channels = img.shape
-    if channels == 2:
-        first = np.zeros_like(img)
-        second = np.zeros_like(img)
-        first[:, :, 0] = img[:, :, 0]
-        second[:, :, 1] = img[:, :, 1]
-        cv.imshow("first", first)
-        cv.imshow("second", second)
-    if channels == 3:
-        first = np.zeros_like(img)
-        second = np.zeros_like(img)
-        third = np.zeros_like(img)
-        first[:, :, 0] = img[:, :, 0]
-        second[:, :, 1] = img[:, :, 1]
-        third[:, :, 2] = img[:, :, 2]
-        cv.imshow("first", first)
-        cv.imshow("second", second)
-        cv.imshow("third", third)
-        cv.waitKey(10000)
-        cv.destroyAllWindows()
-    if channels == 4:
-        # print(img[:, :, 0])
-        first = np.zeros_like(img)
-        second = np.zeros_like(img)
-        third = np.zeros_like(img)
-        fourth = np.zeros_like(img)
-        first[:, :, 0] = img[:, :, 0]
-        second[:, :, 1] = img[:, :, 1]
-        third[:, :, 2] = img[:, :, 2]
-        fourth[:, :, 3] = img[:, :, 3]
-        cv.imshow("first", first)
-        cv.imshow("second", second)
-        cv.imshow("third", third)
-        cv.imshow("fourth", fourth)
-        cv.waitKey(10000)
-        cv.destroyAllWindows()
-
-
-def bgr_to_cmyk(img):
-    RGB_SCALE = 255
-    CMYK_SCALE = 100
-    altura, largura, bands = img.shape
-    resultado = np.zeros((altura, largura, 4), dtype=np.uint8)
-    for x in range(altura):
-        for y in range(largura):
-            r = img[y, x, 2]
-            g = img[y, x, 1]
-            b = img[y, x, 0]
-            if (r, g, b) == (0, 0, 0):
-                # black
-                resultado[y, x] = [0, 0, 0, CMYK_SCALE]
-            # rgb [0,255] -> cmy [0,1]
-            C = 1 - r / RGB_SCALE
-            M = 1 - g / RGB_SCALE
-            Y = 1 - b / RGB_SCALE
-            # extract out k [0, 1]
-            min_cmy = min(C, M, Y)
-            C = (C - min_cmy) / (1 - min_cmy)
-            M = (M - min_cmy) / (1 - min_cmy)
-            Y = (Y - min_cmy) / (1 - min_cmy)
-            K = min_cmy
-            resultado[y, x] = [round(
-                C * CMYK_SCALE), round(M * CMYK_SCALE), round(Y * CMYK_SCALE), round(K * CMYK_SCALE)]
-            # rescale to the range [0,CMYK_SCALE]
-    return resultado
-
-
-def cvtBGR2CMYK(path):
-    image = Image.open(
-        path)
-    cmyk_image = image.convert('CMYK')
-    bands = Image.Image.split(cmyk_image)
-    arr = np.array(cmyk_image).astype('uint8')
-    C = np.zeros_like(arr)
-    C[:, :, 0] = np.array(bands[0]).astype('uint8')
-    M = np.zeros_like(arr)
-    M[:, :, 1] = np.array(bands[1]).astype('uint8')
-    Y = np.zeros_like(arr)
-    Y[:, :, 2] = np.array(bands[2]).astype('uint8')
-    K = np.zeros_like(arr)
-    K[:, :, 3] = np.array(bands[3]).astype('uint8')
-    print(arr[0][0])
-    cv.imshow('cmyk', arr)
-    # cv.imshow('C', C)
-    # cv.imshow('M', M)
-    # cv.imshow('Y', Y)
-    # cv.imshow('K', K)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
-    return arr
-
-
-path = cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg")
-img = cv.imread(path)  # IMREAD_UNCHANGED
-if img is None:
-    sys.exit("Could not read the image.")
-h, w, channels = img.shape
-# cmyk_1 = bgr_to_cmyk(img)
-# cv.imshow('aaaa', cmyk_1)
-# cv.waitKey(0)
-if (channels == 1):
-    cv.imshow("Imagem com só um componente", img)
+def decomporBGR(img):
+    b = np.zeros_like(img)
+    b[:,:,0] = img[:,:,0]
+    g = np.zeros_like(img)
+    g[:,:,1] = img[:,:,1]
+    r = np.zeros_like(img)
+    r[:,:,2] = img[:,:,2]
+    cv.imshow("B", b)
+    cv.imshow("g", g)
+    cv.imshow("r", r)
     cv.waitKey()
     cv.destroyAllWindows()
-elif (channels == 2):
-    cv.imshow("Imagem com dois componentes", img)
-    decompor(img)
-    cv.waitKey()
-    cv.destroyAllWindows()
-elif (channels == 3):
-    cv.imshow("Imagem com três componentes", img)
-    decompor(img)
-    # converter
-    hsb = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    yuv = cv.cvtColor(img, cv.COLOR_BGR2YUV)
-    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    cmyk = cvtBGR2CMYK(path)
-    cv.imshow("BGR para Gray", gray)
-    cv.imshow("BGR para HSB", hsb)
-    decompor(hsb)
-    cv.imshow("BGR para CMYK", cmyk)
-    decompor(cmyk)
-    # cv.waitKey(10000)
-    # cv.destroyAllWindows()
-    cv.imshow("BGR para YUV", yuv)
-    decompor(yuv)
-    # cv.waitKey()
-    # cv.destroyAllWindows()
-else:
-    cv.imshow("Imagem com quatro componentes", img)
-    decompor(img)
-    cv.waitKey(10000)
-    cv.destroyAllWindows()
 
-cv.waitKey(10000)
-cv.destroyAllWindows()
-# Primeiro eu tenho que mostrar a imagem colorida e em seguida, mostrar as componentes dela.
+def decomporCMYK(cmyk):
+    c = np.zeros_like(cmyk)
+    c[:,:,0] = cmyk[:,:,0]
+    cv.imshow("c",converterCMYK2BGR(c))
+
+
+
+
+def converterBGR2CMYK(bgr):
+    # primeiramente, converter para cmy
+    bgrdash = bgr.astype(float)/255.
+
+    # Calculate K as (1 - whatever is biggest out of Rdash, Gdash, Bdash)
+    K  = 1 - np.max(bgrdash, axis=2)
+
+    # Calculate C
+    C = (1-bgrdash[...,2] - K)/(1-K)
+
+    # Calculate M
+    M = (1-bgrdash[...,1] - K)/(1-K)
+
+    # Calculate Y
+    Y = (1-bgrdash[...,0] - K)/(1-K)
+
+    # Combine 4 channels into single image and re-scale back up to uint8
+    CMYK = (np.dstack((C,M,Y,K)) * 255).astype(np.uint8)
+    return CMYK
+
+def converterCMYK2BGR(cmyk):
+    h,w,channels = cmyk.shape
+    bgr = np.zeros((h,w,3))
+    print(1 - cmyk[0,0,0])
+    bgr[:,:,2] = 255 * (1 - cmyk[:,:,0]/255) * (1 - cmyk[:,:,3]/255)
+    bgr[:,:,1] = 255 * (1 - cmyk[:,:,1]/255) * (1 - cmyk[:,:,3]/255)
+    bgr[:,:,0] = 255 * (1 - cmyk[:,:,2]/255) * (1 - cmyk[:,:,3]/255)
+    cv.imshow("bgr", bgr.astype('uint8'))
+    #print(bgr[0])
+    return bgr
+    cv.waitKey()
+
+def converterBGR2GRAY(img, tipo=""):
+    h,w,channels = img.shape
+    gray  = np.zeros((255,255))
+    if(tipo == "simples"):
+        gray = (img[:,:,0] * 0.333) + (img[:,:,1] * 0.333) + ( 0.333 * img[:,:,2])
+        gray = gray.astype("uint8")
+        cv.imshow("gray - solução simples", gray)
+        cv.waitKey()
+        cv.destroyAllWindows()
+    elif(tipo == "NTSC"):
+        gray = (img[:,:,0] * 0.114) + (img[:,:,1] * 0.587) + ( 0.299 * img[:,:,2])
+        gray = gray.astype("uint8")
+        cv.imshow("gray - NTSC", gray)
+        cv.waitKey()
+        cv.destroyAllWindows()
+
+
+
+img = cv.imread(cv.samples.findFile(
+    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg"), cv.IMREAD_UNCHANGED)
+# decompor rgb
+cv.imshow("bgr", img)
+decomporBGR(img)
+#Converter BGR to CMYK
+cmyk = converterBGR2CMYK(img)
+converterBGR2GRAY(img,"simples")
+converterBGR2GRAY(img,"NTSC")
+decomporCMYK(cmyk)
