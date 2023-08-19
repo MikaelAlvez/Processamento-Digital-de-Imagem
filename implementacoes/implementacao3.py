@@ -16,48 +16,77 @@ def decomporBGR(img):
     cv.destroyAllWindows()
 
 def decomporCMYK(cmyk):
+    h,w,channels = cmyk.shape
     c = np.zeros_like(cmyk)
     c[:,:,0] = cmyk[:,:,0]
+    c[:,:,3] = cmyk[:,:,3]
+    m = np.zeros_like(cmyk)
+    m[:,:,1] = cmyk[:,:,1]
+    m[:,:,3] = cmyk[:,:,3]
+    y = np.zeros_like(cmyk)
+    y[:,:,2] = cmyk[:,:,2]
+    y[:,:,3] = cmyk[:,:,3]
+    k = np.zeros((h,w,4)) # criei um single channel
+    k[:,:,3] = cmyk[:,:,3] 
+    k = converterCMYK2BGR(k)
     cv.imshow("c",converterCMYK2BGR(c))
+    cv.imshow('m', converterCMYK2BGR(m))
+    cv.imshow('y', converterCMYK2BGR(y))
+    #converterBGR2GRAY(k,"simples")
 
-
-
+def decomporHSV(img):
+    cv.destroyAllWindows()
+    H = np.zeros_like(img)
+    H[:,:,0] = img[:,:,0]
+    S = np.zeros_like(img)
+    S[:,:,1] = img[:,:,1]
+    V = np.zeros_like(img)
+    V[:,:,2] = img[:,:,2]
+    #H = cv.cvtColor(H,cv.COLOR_HSV2BGR)
+    #S = cv.cvtColor(S,cv.COLOR_HSV2BGR)
+    #V = cv.cvtColor(V,cv.COLOR_HSV2BGR)
+    cv.imshow("HSV", img)
+    cv.imshow("H", H)
+    cv.imshow("S", S)
+    cv.imshow("V", V)
+    cv.waitKey()
+    cv.destroyAllWindows()
 
 def converterBGR2CMYK(bgr):
-    # primeiramente, converter para cmy
-    bgrdash = bgr.astype(float)/255.
+    altura,largura,channels = bgr.shape
+    bgrdash = bgr.astype(np.float64)/255.
+    C = 1 - bgrdash[:,:,2]
+    M = 1 - bgrdash[:,:,1]
+    Y = 1 - bgrdash[:,:,0]
+    CMY = np.dstack((C,M,Y))
+    minValor = np.min(CMY,2)
+    print(minValor[124,0])
+    CMYK = np.zeros((altura,largura,4))
+    for x in range(altura):
+        for y in range(largura):
+            if(minValor[y,x] == 1):
+                CMYK[y,x] = (0,0,0,1)
+            else:
+                K = minValor[y,x]
+                CMYK[y,x,0] = (C[y,x] - K) / (1 - K)
+                CMYK[y,x,1] = (M[y,x] - K) / (1 - K) 
+                CMYK[y,x,2] = (Y[y,x] - K) / (1 - K) 
+                CMYK[y,x,3] = K 
+    return (CMYK*255).astype('uint8')
 
-    # Calculate K as (1 - whatever is biggest out of Rdash, Gdash, Bdash)
-    K  = 1 - np.max(bgrdash, axis=2)
-
-    # Calculate C
-    C = (1-bgrdash[...,2] - K)/(1-K)
-
-    # Calculate M
-    M = (1-bgrdash[...,1] - K)/(1-K)
-
-    # Calculate Y
-    Y = (1-bgrdash[...,0] - K)/(1-K)
-
-    # Combine 4 channels into single image and re-scale back up to uint8
-    CMYK = (np.dstack((C,M,Y,K)) * 255).astype(np.uint8)
-    return CMYK
 
 def converterCMYK2BGR(cmyk):
-    h,w,channels = cmyk.shape
-    bgr = np.zeros((h,w,3))
-    print(1 - cmyk[0,0,0])
-    bgr[:,:,2] = 255 * (1 - cmyk[:,:,0]/255) * (1 - cmyk[:,:,3]/255)
-    bgr[:,:,1] = 255 * (1 - cmyk[:,:,1]/255) * (1 - cmyk[:,:,3]/255)
-    bgr[:,:,0] = 255 * (1 - cmyk[:,:,2]/255) * (1 - cmyk[:,:,3]/255)
-    cv.imshow("bgr", bgr.astype('uint8'))
-    #print(bgr[0])
+    cmyk = cmyk / 255
+    R = 255 * (1 - cmyk[:,:,0]) * (1 - cmyk[:,:,3])
+    G = 255 * (1 - cmyk[:,:,1]) * (1 - cmyk[:,:,3])
+    B = 255 * (1 - cmyk[:,:,2]) * (1 - cmyk[:,:,3])
+    bgr = np.dstack((B,G,R)).astype('uint8')
     return bgr
-    cv.waitKey()
+
 
 def converterBGR2GRAY(img, tipo=""):
     h,w,channels = img.shape
-    gray  = np.zeros((255,255))
+    gray  = np.zeros((h,w))
     if(tipo == "simples"):
         gray = (img[:,:,0] * 0.333) + (img[:,:,1] * 0.333) + ( 0.333 * img[:,:,2])
         gray = gray.astype("uint8")
@@ -71,6 +100,20 @@ def converterBGR2GRAY(img, tipo=""):
         cv.waitKey()
         cv.destroyAllWindows()
 
+def decomporYUV(yuv):
+    U = np.zeros_like(yuv)
+    U[:,:,0] = yuv[:,:,1]
+    U[:,:,1] = yuv[:,:,0]
+    U = cv.cvtColor(U, cv.COLOR_YUV2BGR)
+    V = np.zeros_like(yuv)
+    V[:,:,2] = yuv[:,:,2]
+    V[:,:,1] = yuv[:,:,0]
+    V = cv.cvtColor(V, cv.COLOR_YUV2BGR)
+    cv.imshow("YUV", yuv)
+    cv.imshow("U", U)
+    cv.imshow("V", V)
+    cv.waitKey()
+    cv.destroyAllWindows()
 
 
 img = cv.imread(cv.samples.findFile(
@@ -80,6 +123,14 @@ cv.imshow("bgr", img)
 decomporBGR(img)
 #Converter BGR to CMYK
 cmyk = converterBGR2CMYK(img)
+cv.imshow("CMYK retornando para BGR",converterCMYK2BGR(cmyk))
+decomporCMYK(cmyk)
+# Converter BGR to gray
 converterBGR2GRAY(img,"simples")
 converterBGR2GRAY(img,"NTSC")
-decomporCMYK(cmyk)
+# Converter BGR to HSV
+hsv = cv.cvtColor(img,cv.COLOR_BGR2HSV)
+decomporHSV(hsv)
+# Converter BGR to yuv
+yuv = cv.cvtColor(img, cv.COLOR_BGR2YUV)
+decomporYUV(yuv)
