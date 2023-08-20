@@ -53,27 +53,23 @@ def decomporHSV(img):
     cv.destroyAllWindows()
 
 def converterBGR2CMYK(bgr):
-    altura,largura,channels = bgr.shape
-    bgrdash = bgr.astype(np.float64)/255.
-    C = 1 - bgrdash[:,:,2]
-    M = 1 - bgrdash[:,:,1]
-    Y = 1 - bgrdash[:,:,0]
-    CMY = np.dstack((C,M,Y))
-    minValor = np.min(CMY,2)
-    print(minValor[124,0])
-    CMYK = np.zeros((altura,largura,4))
-    for x in range(altura):
-        for y in range(largura):
-            if(minValor[y,x] == 1):
-                CMYK[y,x] = (0,0,0,1)
-            else:
-                K = minValor[y,x]
-                CMYK[y,x,0] = (C[y,x] - K) / (1 - K)
-                CMYK[y,x,1] = (M[y,x] - K) / (1 - K) 
-                CMYK[y,x,2] = (Y[y,x] - K) / (1 - K) 
-                CMYK[y,x,3] = K 
-    return (CMYK*255).astype('uint8')
+    bgrdash = bgr.astype(np.float)/255.
 
+    # Calculate K as (1 - whatever is biggest out of Rdash, Gdash, Bdash)
+    K = 1 - np.max(bgrdash, axis=2)
+
+    # Calculate C
+    C = (1-bgrdash[...,2] - K)/(1-K)
+
+    # Calculate M
+    M = (1-bgrdash[...,1] - K)/(1-K)
+
+    # Calculate Y
+    Y = (1-bgrdash[...,0] - K)/(1-K)
+
+    # Combine 4 channels into single image and re-scale back up to uint8
+    CMYK = (np.dstack((C,M,Y,K)) * 255).astype(np.uint8)
+    return CMYK
 
 def converterCMYK2BGR(cmyk):
     cmyk = cmyk / 255
@@ -104,11 +100,9 @@ def decomporYUV(yuv):
     U = np.zeros_like(yuv)
     U[:,:,0] = yuv[:,:,1]
     U[:,:,1] = yuv[:,:,0]
-    U = cv.cvtColor(U, cv.COLOR_YUV2BGR)
     V = np.zeros_like(yuv)
     V[:,:,2] = yuv[:,:,2]
     V[:,:,1] = yuv[:,:,0]
-    V = cv.cvtColor(V, cv.COLOR_YUV2BGR)
     cv.imshow("YUV", yuv)
     cv.imshow("U", U)
     cv.imshow("V", V)
@@ -117,7 +111,7 @@ def decomporYUV(yuv):
 
 
 img = cv.imread(cv.samples.findFile(
-    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg"), cv.IMREAD_UNCHANGED)
+    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/Barns_grand_tetons.jpg"), cv.IMREAD_UNCHANGED)
 # decompor rgb
 cv.imshow("bgr", img)
 decomporBGR(img)

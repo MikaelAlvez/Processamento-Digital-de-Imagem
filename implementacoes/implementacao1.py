@@ -29,7 +29,7 @@ def sub(img1, img2):
             for y in range(largura):
                 a = 255 / (maior_valor - menor_valor)
                 b = -a * menor_valor
-                resultado[y, x] = round(a * imgSub[y, x] + b)
+                resultado[x, y] = round(a * imgSub[x, y] + b)
     return resultado.astype('uint8')
 
 
@@ -41,7 +41,7 @@ def div(img1, img2):
     resultado = np.copy(imgDiv).astype('uint8')
     for x in range(altura):
         for y in range(largura):
-            resultado[y, x] = round(imgDiv[y, x])
+            resultado[x,y] = round(imgDiv[x,y])
     return resultado
 
 
@@ -58,7 +58,7 @@ def mul(img1, img2):
             for y in range(largura):
                 a = 255 / (maior_valor - menor_valor)
                 b = -a * menor_valor
-                resultado[y, x] = round(a * imgMul[y, x] + b)
+                resultado[x,y] = round(a * imgMul[x,y] + b)
     return resultado.astype('uint8')
 
 

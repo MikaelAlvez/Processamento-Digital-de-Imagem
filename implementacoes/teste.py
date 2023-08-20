@@ -110,3 +110,75 @@ cv.imshow('bbbb', cmyk)
 cv.waitKey(10000)
 cv.destroyAllWindows()
 # Primeiro eu tenho que mostrar a imagem colorida e em seguida, mostrar as componentes dela.
+def converterHSV2BGR(hsv):
+    h,w,channels = hsv.shape
+    bgr = np.zeros((h,w,3))
+    rgbdash = np.zeros((h,w,3)).astype('float')
+    for x in range(h):
+        for y in range(w):
+            H = hsv[y,x,0]
+            S = hsv[y,x,1]
+            V = hsv[y,x,2]
+            C = V * S
+            X = C * (1 - abs(((H/60) % 2) - 1))
+            M = V - C
+            if(H >= 0 and H < 60):
+                rgbdash[y,x] = (C,X,0)
+            elif(H >= 60 and H < 120):
+                rgbdash[y,x] = (X,C,0)
+            elif(H >= 120 and H < 180):
+                rgbdash[y,x] = (0,C,X)
+            elif(H >= 180 and H < 240):
+                rgbdash[y,x] = (0,X,C)
+            elif(H >= 240 and H < 300):
+                rgbdash[y,x] = (X,0,C)
+            elif(H >= 300 and H < 360):
+                rgbdash[y,x] = (C,0,X)
+            bgr[y,x] = (rgbdash[y,x,2]+M * 255, rgbdash[y,x,1] + M * 255, rgbdash[y,x,0] + M * 255)
+    print(bgr[0,0])
+    bgr = bgr.astype('uint8')
+    cv.imshow('bgr',bgr)
+    cv.waitKey()
+    return bgr
+def converterBGR2HSV(img):
+    h,w,channels = img.shape
+    rDash = (img[:,:,2]/255).astype('float')
+    gDash = (img[:,:,1]/255).astype('float')
+    bDash = (img[:,:,0]/255).astype('float')
+    HSV = np.zeros((h,w,3))
+    for x in range(h):
+        for y in range(w):
+            cMax = max(rDash[y,x], gDash[y,x], bDash[y,x]) 
+            cMin = min(rDash[y,x], gDash[y,x], bDash[y,x]) 
+            delta = cMax - cMin
+            if(delta == 0):
+                H = 0
+            elif(cMax == rDash[y,x]):
+                H = 60 * (((gDash[y,x] - bDash[y,x])/delta) %6)
+            elif(cMax == gDash[y,x]):
+                H = 60 * (((bDash[y,x] - rDash[y,x])/delta) + 2)
+            elif(cMax == bDash[y,x]):
+                H = 60 * (((rDash[y,x] - gDash[y,x])/delta) + 4)
+            if(cMax == 0):
+                S = 0
+            else:
+                S = (delta/cMax)
+            V = cMax
+            HSV[y,x] = (H,S,V)
+    return HSV
+def decomporHSV(img):
+    cv.destroyAllWindows()
+    H = np.zeros_like(img)
+    H[:,:,0] = img[:,:,0]
+    H[:,:,2] = img[:,:,2]
+    S = np.zeros_like(img)
+    S[:,:,1] = img[:,:,1]
+    S[:,:,2] = img[:,:,2]
+    V = np.zeros_like(img)
+    V[:,:,2] = img[:,:,2]
+    cv.imshow("HSV", img)
+    cv.imshow("H", cv.cvtColor(H,cv.COLOR_HSV2BGR))
+    cv.imshow("S", cv.cvtColor(S,cv.COLOR_HSV2BGR))
+    cv.imshow("V", cv.cvtColor(V,cv.COLOR_HSV2BGR))
+    cv.waitKey()
+    cv.destroyAllWindows()
