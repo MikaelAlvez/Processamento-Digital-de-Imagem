@@ -38,18 +38,18 @@ def div(img1, img2):
     imgDiv = np.divide(img1, img2, dtype='float')
     maior_valor = max(max(linha) for linha in imgDiv)
     menor_valor = min(min(linha) for linha in imgDiv)
-    resultado = np.copy(imgDiv).astype('uint8')
+    resultado = np.copy(imgDiv)
     for x in range(altura):
         for y in range(largura):
-            resultado[y, x] = round(imgDiv[y, x])
-    return resultado
+            resultado[y, x] = imgDiv[y, x]
+    return resultado.astype('uint8')
 
 
 def mul(img1, img2):
     altura, largura = img1.shape
     img1 = img1.astype('int32')
     img2 = img2.astype('int32')
-    imgMul = img1 * img2
+    imgMul = np.multiply(img1, img2).astype('int32')
     maior_valor = max(max(linha) for linha in imgMul)
     menor_valor = min(min(linha) for linha in imgMul)
     resultado = np.copy(imgMul)
@@ -80,11 +80,11 @@ img2 = cv.imread(cv.samples.findFile(
     "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/caman.tif"), cv.IMREAD_UNCHANGED)
 img_jpg = cv.imread(cv.samples.findFile(
     "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg"), cv.IMREAD_UNCHANGED)
-cv.imshow('tif', img2)
-cv.imshow('jpg', img_jpg)
-cv.imshow('pgm', img)
-cv.waitKey(0)
-cv.destroyAllWindows()
+# cv.imshow('tif', img2)
+# cv.imshow('jpg', img_jpg)
+# cv.imshow('pgm', img)
+# cv.waitKey(0)
+# cv.destroyAllWindows()
 
 
 if img is None:
@@ -98,12 +98,11 @@ print(imgSoma[0][0])
 cv.imshow('soma', soma(img, img2))
 cv.imshow('sub 1 e 2', sub(img, img2))
 cv.imshow('sub 2 e 1', sub(img2, img))
-multiplicador = np.array([3])
-imgMul = mul(img, multiplicador)
+imgMul = mul(img, img2)
 cv.imshow('mul', imgMul)
-divisor = np.array([3])
-cv.imshow('div', div(img, divisor))
+cv.imshow('div', div(img, img2))
 cv.imshow('original', img)
+cv.imshow('original2', img2)
 print(imgMul[0][0], img[0][0])
 cv.imshow('and', logical_and(img, img2))
 cv.imshow('or', logical_or(img, img2))
