@@ -29,7 +29,7 @@ def sub(img1, img2):
             for y in range(largura):
                 a = 255 / (maior_valor - menor_valor)
                 b = -a * menor_valor
-                resultado[y, x] = round(a * imgSub[y, x] + b)
+                resultado[x, y] = round(a * imgSub[x, y] + b)
     return resultado.astype('uint8')
 
 
@@ -41,8 +41,8 @@ def div(img1, img2):
     resultado = np.copy(imgDiv)
     for x in range(altura):
         for y in range(largura):
-            resultado[y, x] = imgDiv[y, x]
-    return resultado.astype('uint8')
+            resultado[x, y] = round(imgDiv[x, y])
+    return resultado
 
 
 def mul(img1, img2):
@@ -58,7 +58,7 @@ def mul(img1, img2):
             for y in range(largura):
                 a = 255 / (maior_valor - menor_valor)
                 b = -a * menor_valor
-                resultado[y, x] = round(a * imgMul[y, x] + b)
+                resultado[x, y] = round(a * imgMul[x, y] + b)
     return resultado.astype('uint8')
 
 
@@ -75,35 +75,29 @@ def logical_xor(img1, img2):
 
 
 img = cv.imread(cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
 img2 = cv.imread(cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/caman.tif"), cv.IMREAD_UNCHANGED)
+    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/Airplane.pgm"), cv.IMREAD_UNCHANGED)
 img_jpg = cv.imread(cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg"), cv.IMREAD_UNCHANGED)
-# cv.imshow('tif', img2)
-# cv.imshow('jpg', img_jpg)
-# cv.imshow('pgm', img)
-# cv.waitKey(0)
-# cv.destroyAllWindows()
+    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg"), cv.IMREAD_UNCHANGED)
+cv.imshow('tif', img2)
+cv.imshow('jpg', img_jpg)
+cv.imshow('pgm', img)
+cv.waitKey(0)
+cv.destroyAllWindows()
 
 
 if img is None:
     sys.exit("Could not read the image 1.")
 if img2 is None:
     sys.exit("Could not read the image 2.")
-print(img[0][0])
-print(img2[0][0])
 imgSoma = soma(img, img2)
-print(imgSoma[0][0])
 cv.imshow('soma', soma(img, img2))
 cv.imshow('sub 1 e 2', sub(img, img2))
 cv.imshow('sub 2 e 1', sub(img2, img))
-imgMul = mul(img, img2)
-cv.imshow('mul', imgMul)
+cv.imshow('mul', mul(img, img2))
 cv.imshow('div', div(img, img2))
 cv.imshow('original', img)
-cv.imshow('original2', img2)
-print(imgMul[0][0], img[0][0])
 cv.imshow('and', logical_and(img, img2))
 cv.imshow('or', logical_or(img, img2))
 cv.imshow('xor', logical_xor(img, img2))
