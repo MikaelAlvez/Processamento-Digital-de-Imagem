@@ -21,20 +21,17 @@ def decomporCMYK(cmyk):
     h, w, channels = cmyk.shape
     c = np.zeros_like(cmyk)
     c[:, :, 0] = cmyk[:, :, 0]
-    c[:, :, 3] = cmyk[:, :, 3]
     m = np.zeros_like(cmyk)
     m[:, :, 1] = cmyk[:, :, 1]
-    m[:, :, 3] = cmyk[:, :, 3]
     y = np.zeros_like(cmyk)
     y[:, :, 2] = cmyk[:, :, 2]
-    y[:, :, 3] = cmyk[:, :, 3]
-    k = np.zeros((h, w, 4))  # criei um single channel
-    k[:, :, 3] = cmyk[:, :, 3]
-    k = converterCMYK2BGR(k)
+    k = np.zeros((h, w))  # criei um single channel
+    k = cmyk[:, :, 3]
     cv.imshow("c", converterCMYK2BGR(c))
     cv.imshow('m', converterCMYK2BGR(m))
     cv.imshow('y', converterCMYK2BGR(y))
-    # converterBGR2GRAY(k,"simples")
+    cv.imshow('k', k)
+    cv.waitKey()
 
 
 def decomporHSV(img):
@@ -126,12 +123,12 @@ img = cv.imread(cv.samples.findFile(
 cv.imshow("bgr", img)
 decomporBGR(img)
 # Converter BGR to CMYK
-# cmyk = converterBGR2CMYK(img)
+cmyk = converterBGR2CMYK(img)
 # cv.imshow("CMYK retornando para BGR", converterCMYK2BGR(cmyk))
-# decomporCMYK(cmyk)
+decomporCMYK(cmyk)
 # Converter BGR to gray
-# converterBGR2GRAY(img, "simples")
-# converterBGR2GRAY(img, "NTSC")
+converterBGR2GRAY(img, "simples")
+converterBGR2GRAY(img, "NTSC")
 # Converter BGR to HSV
 hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
 decomporHSV(hsv)

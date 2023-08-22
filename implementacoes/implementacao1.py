@@ -39,10 +39,16 @@ def div(img1, img2):
     maior_valor = max(max(linha) for linha in imgDiv)
     menor_valor = min(min(linha) for linha in imgDiv)
     resultado = np.copy(imgDiv)
+    # for x in range(altura):
+    # for y in range(largura):
+    #   resultado[x, y] = round(imgDiv[x, y])
+    print(maior_valor, menor_valor)
     for x in range(altura):
         for y in range(largura):
-            resultado[x, y] = round(imgDiv[x, y])
-    return resultado
+            a = 255 / (maior_valor - menor_valor)
+            b = -a * menor_valor
+            resultado[x, y] = round(a * imgDiv[x, y] + b)
+    return resultado.astype('uint8')
 
 
 def mul(img1, img2):
@@ -75,11 +81,11 @@ def logical_xor(img1, img2):
 
 
 img = cv.imread(cv.samples.findFile(
-    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
 img2 = cv.imread(cv.samples.findFile(
-    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/Airplane.pgm"), cv.IMREAD_UNCHANGED)
+    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/Airplane.pgm"), cv.IMREAD_UNCHANGED)
 img_jpg = cv.imread(cv.samples.findFile(
-    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg"), cv.IMREAD_UNCHANGED)
+    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg"), cv.IMREAD_UNCHANGED)
 cv.imshow('tif', img2)
 cv.imshow('jpg', img_jpg)
 cv.imshow('pgm', img)
@@ -96,7 +102,7 @@ cv.imshow('soma', soma(img, img2))
 cv.imshow('sub 1 e 2', sub(img, img2))
 cv.imshow('sub 2 e 1', sub(img2, img))
 cv.imshow('mul', mul(img, img2))
-cv.imshow('div', div(img, img2))
+cv.imshow('div 1 e 2', div(img, img2))
 cv.imshow('original', img)
 cv.imshow('and', logical_and(img, img2))
 cv.imshow('or', logical_or(img, img2))
