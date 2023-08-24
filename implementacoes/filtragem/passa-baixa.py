@@ -3,6 +3,56 @@ import cv2 as cv
 import math
 import statistics
 
+def somboonkaew(img):
+    matriz_final = np.array(img)
+    h,w = img.shape
+    for x in range(1, h-2):
+        for y in range(1, w-2):
+            media = []
+            variancia = []
+            # 12 mascaras
+            mascara1 = [img[x-2,y-2], img[x-1,y-1], img[x,y], img[x+1,y+1], img[x+2,y+2], img[x-1,y+1], img[x+1,y-1]]
+            media.append(statistics.mean(mascara1))
+            variancia.append(statistics.variance(mascara1))
+            mascara2 = [img[x-2,y+2], img[x-1,y+1], img[x,y], img[x+1,y-1], img[x+2,y-2], img[x-1,y-1], img[x+1,y+1]]
+            media.append(statistics.mean(mascara2))
+            variancia.append(statistics.variance(mascara2))
+            mascara3 = [img[x,y-2],img[x,y-1],img[x,y], img[x,y+1], img[x,y+2], img[x+1,y], img[x-1,y]]
+            media.append(statistics.mean(mascara3))
+            variancia.append(statistics.variance(mascara3))
+            mascara4 = [img[x-2,y],img[x-1,y], img[x,y], img[x+1,y], img[x+2,y], img[x,y-1],img[x,y+1]]
+            media.append(statistics.mean(mascara4))
+            variancia.append(statistics.variance(mascara4))
+            mascara5 = [img[x-1,y-1],img[x-1,y],img[x-1,y+1],img[x,y],img[x+1,y-1],img[x+1,y],img[x+1,y+1]]
+            media.append(statistics.mean(mascara5))
+            variancia.append(statistics.variance(mascara5))
+            mascara6 = [img[x-1,y-1], img[x,y-1], img[x+1,y-1], img[x,y], img[x-1,y+1],img[x, y+1], img[x+1, y+1]]
+            media.append(statistics.mean(mascara6))
+            variancia.append(statistics.variance(mascara6))
+            mascara7 = [img[x-1,y-1], img[x-1,y], img[x,y-1], img[x,y], img[x,y+1], img[x+1,y], img[x+1,y+1]]
+            media.append(statistics.mean(mascara7))
+            variancia.append(statistics.variance(mascara7))
+            mascara8 = [img[x-1,y+1], img[x-1,y], img[x,y-1], img[x,y], img[x,y+1], img[x+1,y-1], img[x+1,y]]
+            media.append(statistics.mean(mascara8))
+            variancia.append(statistics.variance(mascara8))
+            mascara9 = [img[x-1,y], img[x,y-1], img[x,y], img[x,y+1], img[x+1,y-1], img[x+1,y], img[x+1,y+1]]
+            media.append(statistics.mean(mascara9))
+            variancia.append(statistics.variance(mascara9))
+            mascara10 = [img[x-1,y-1], img[x-1,y], img[x,y-1], img[x,y], img[x,y+1], img[x+1,y-1], img[x+1,y]]
+            media.append(statistics.mean(mascara10))
+            variancia.append(statistics.variance(mascara10))
+            mascara11 = [img[x-1,y-1], img[x-1,y], img[x-1,y+1], img[x,y-1], img[x,y], img[x,y+1], img[x+1,y]]
+            media.append(statistics.mean(mascara11))
+            variancia.append(statistics.variance(mascara11))
+            mascara12 = [img[x-1, y], img[x-1,y+1], img[x,y-1], img[x,y], img[x,y+1], img[x+1,y], img[x+1,y+1]]
+            media.append(statistics.mean(mascara12))
+            variancia.append(statistics.variance(mascara12))
+            menor = min(variancia)
+            for i in range(len(variancia)):
+                if (variancia[i] == menor):
+                    matriz_final[x, y] = media[i]
+    cv.imshow("Somboonkaew", matriz_final)
+    cv.waitKey()
 
 def nagaoEMatsuyama(img):
     matriz_final = np.array(img)
@@ -302,7 +352,7 @@ def media(img):
 
 
 img = cv.imread(cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/Lenasalp.pgm"), cv.IMREAD_UNCHANGED)
+    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/Lenasalp.pgm"), cv.IMREAD_UNCHANGED)
 
 # media(img)
 # cv.destroyAllWindows()
@@ -315,3 +365,4 @@ img = cv.imread(cv.samples.findFile(
 # kuwahara(img)
 # tomitaEtsuji(img)
 # nagaoEMatsuyama(img)
+somboonkaew(img)
