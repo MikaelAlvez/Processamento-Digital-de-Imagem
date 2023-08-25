@@ -15,6 +15,7 @@ def soma(img1, img2):
             for y in range(largura):
                 a = 255 / (maior_valor - menor_valor)
                 b = -a * menor_valor
+                resultado[x, y] = round(a * imgSoma[x, y] + b)
     return resultado.astype('uint8')
 
 
