@@ -1,0 +1,71 @@
+import cv2
+import numpy as np
+
+def detect_lines(image_path, mask):
+    # Carregar a imagem em escala de cinza
+    gray_image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    
+    # Aplicar a convolução usando a máscara fornecida
+    convolved_image = cv2.filter2D(gray_image, -1, mask)
+    
+    # Encontrar os pixels acima de um limiar
+    T = np.max(convolved_image) * 0.7  # Definindo o limiar automaticamente
+    detected_lines = (convolved_image > T).astype(np.uint8) * 255
+    
+    # Exibir as imagens original e detectada lado a lado
+    stacked_images = np.hstack((gray_image, detected_lines))
+    cv2.imshow("Original vs Detected Lines", stacked_images)
+    
+    # Esperar até que uma tecla seja pressionada
+    key = cv2.waitKey(0)
+    if key == 27:  # Verifica se a tecla pressionada é Esc
+        cv2.destroyAllWindows()
+        return False
+    
+    return True
+
+# Caminho da imagem
+image_path = "implementacoes\images\segmentacao.png"
+
+# Menu de opções
+menu_text = """
+Opções:
+A. Horizontal
+B. Vertical
+C. 45 graus
+D. 135 graus
+Pressione S para sair.
+"""
+
+while True:
+    print(menu_text)
+    
+    # Solicitar ao usuário que escolha uma opção
+    option = input("Escolha uma opção: ")
+    
+    if option == 'S':
+        break
+    
+    # Mapear a opção para a máscara correspondente
+    masks = {
+        'A': np.array([[-1, -1, -1],
+                       [ 2,  2,  2],
+                       [-1, -1, -1]]),
+        'B': np.array([[-1, 2,  -1],
+                       [-1,  2, -1],
+                       [ -1, 2, -1]]),
+        'C': np.array([[-1,  -1, 2],
+                       [-1,  2, -1],
+                       [2,  -1, -1]]),
+        'D': np.array([[ 2, -1, -1],
+                       [-1,  2, -1],
+                       [-1, -1,  2]])
+    }
+    
+    # Executar a detecção de linhas com base na opção escolhida
+    if option in masks:
+        should_continue = detect_lines(image_path, masks[option])
+        if not should_continue:
+            break
+    else:
+        print("Opção inválida.")
