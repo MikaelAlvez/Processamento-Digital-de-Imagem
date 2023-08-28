@@ -48,7 +48,7 @@ def apply_square_transform(image):
     fmax = np.max(image)
 
     # Cálculo do parâmetro 'a' para a transformação de quadrado
-    a = 255 / (fmax ** 2)
+    a = 1
 
     # Aplicando a transformação de quadrado
     transformed_image = a * (image ** 2)

@@ -9,8 +9,8 @@ def linear_transformation(image_path):
         print("Erro ao carregar a imagem.")
     else:
         # Definir o intervalo desejado para a nova imagem (Gmin, Gmax)
-        Gmin = 50
-        Gmax = 200
+        Gmin = 0
+        Gmax = 50
         
 
         # Obter os valores mínimos e máximos da imagem original
@@ -93,7 +93,7 @@ def binary_transformation(image_path):
         print("Erro ao carregar a imagem.")
     else:
         # Definir um valor limite para a transformação binária
-        threshold = 128
+        threshold = 45
 
         # Aplicar a transformação binária
         _, binary_image = cv2.threshold(image, threshold, 255, cv2.THRESH_BINARY)

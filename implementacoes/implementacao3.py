@@ -1,7 +1,6 @@
 import cv2 as cv
 import sys
 import numpy as np
-from PIL import Image
 
 
 def decompor(img):
@@ -23,7 +22,7 @@ def decompor(img):
         cv.imshow("first", first)
         cv.imshow("second", second)
         cv.imshow("third", third)
-        cv.waitKey(10000)
+        cv.waitKey(0)
         cv.destroyAllWindows()
     if channels == 4:
         # print(img[:, :, 0])
@@ -39,7 +38,7 @@ def decompor(img):
         cv.imshow("second", second)
         cv.imshow("third", third)
         cv.imshow("fourth", fourth)
-        cv.waitKey(10000)
+        cv.waitKey(0)
         cv.destroyAllWindows()
 
 
@@ -72,33 +71,9 @@ def bgr_to_cmyk(img):
     return resultado
 
 
-def cvtBGR2CMYK(path):
-    image = Image.open(
-        path)
-    cmyk_image = image.convert('CMYK')
-    bands = Image.Image.split(cmyk_image)
-    arr = np.array(cmyk_image).astype('uint8')
-    C = np.zeros_like(arr)
-    C[:, :, 0] = np.array(bands[0]).astype('uint8')
-    M = np.zeros_like(arr)
-    M[:, :, 1] = np.array(bands[1]).astype('uint8')
-    Y = np.zeros_like(arr)
-    Y[:, :, 2] = np.array(bands[2]).astype('uint8')
-    K = np.zeros_like(arr)
-    K[:, :, 3] = np.array(bands[3]).astype('uint8')
-    print(arr[0][0])
-    cv.imshow('cmyk', arr)
-    # cv.imshow('C', C)
-    # cv.imshow('M', M)
-    # cv.imshow('Y', Y)
-    # cv.imshow('K', K)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
-    return arr
-
 
 path = cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena_cor.jpg")
+    "implementacoes\images\lena_cor.jpg")
 img = cv.imread(path)  # IMREAD_UNCHANGED
 if img is None:
     sys.exit("Could not read the image.")
@@ -122,7 +97,8 @@ elif (channels == 3):
     hsb = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     yuv = cv.cvtColor(img, cv.COLOR_BGR2YUV)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    cmyk = cvtBGR2CMYK(path)
+    #cmyk = cvtBGR2CMYK(path)
+    cmyk = bgr_to_cmyk(img)
     cv.imshow("BGR para Gray", gray)
     cv.imshow("BGR para HSB", hsb)
     decompor(hsb)
