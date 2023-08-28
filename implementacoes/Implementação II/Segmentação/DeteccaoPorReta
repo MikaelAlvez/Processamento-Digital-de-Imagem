@@ -1,0 +1,61 @@
+import cv2
+import numpy as np
+
+def detect_lines(image_path, option):
+    # Carregar a imagem em escala de cinza
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    
+    if option == 'A':
+        # Detectar linhas horizontais
+        lines = cv2.HoughLines(image, 1, np.pi / 180, threshold=150)
+        draw_lines(image, lines, (0, 0, 255))  # Desenhar linhas em vermelho
+    elif option == 'B':
+        # Detectar linhas verticais
+        lines = cv2.HoughLines(image, 1, np.pi / 180, threshold=150)
+        draw_lines(image, lines, (0, 255, 0))  # Desenhar linhas em verde
+    elif option == 'C':
+        # Detectar linhas a 45 graus
+        lines = cv2.HoughLines(image, 1, np.pi / 180, threshold=150)
+        draw_lines(image, lines, (255, 0, 0))  # Desenhar linhas em azul
+    elif option == 'D':
+        # Detectar linhas a 135 graus
+        lines = cv2.HoughLines(image, 1, np.pi / 180, threshold=150)
+        draw_lines(image, lines, (0, 255, 255))  # Desenhar linhas em amarelo
+    
+    # Mostrar a imagem resultante
+    cv2.imshow('Detecção de Linhas', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def draw_lines(image, lines, color):
+    if lines is not None:
+        for line in lines:
+            rho, theta = line[0]
+            a = np.cos(theta)
+            b = np.sin(theta)
+            x0 = a * rho
+            y0 = b * rho
+            x1 = int(x0 + 1000 * (-b))
+            y1 = int(y0 + 1000 * (a))
+            x2 = int(x0 - 1000 * (-b))
+            y2 = int(y0 - 1000 * (a))
+            cv2.line(image, (x1, y1), (x2, y2), color, 2)
+
+def main():
+    image_path = 'implementacoes\images\segmentacao.png'
+    
+    print("Menu:")
+    print("A. Detectar linhas horizontais")
+    print("B. Detectar linhas verticais")
+    print("C. Detectar linhas a 45 graus")
+    print("D. Detectar linhas a 135 graus")
+    
+    option = input("Selecione uma opção (A/B/C/D): ").upper()
+    
+    if option in ['A', 'B', 'C', 'D']:
+        detect_lines(image_path, option)
+    else:
+        print("Opção inválida.")
+
+if __name__ == "__main__":
+    main()
