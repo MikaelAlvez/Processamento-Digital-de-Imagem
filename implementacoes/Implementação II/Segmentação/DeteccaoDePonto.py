@@ -26,7 +26,7 @@ def detect_isolated_points(image_path, T):
     cv2.destroyAllWindows()
 
 # Caminho da imagem
-image_path = "implementacoes\images\segmentacao.png"
+image_path = "implementacoes\images\exemplo.jpg"
 
 # Solicitar ao usuário que informe o valor de T
 T = int(input("Informe o valor de T: "))

@@ -14,7 +14,7 @@ def detect_lines(image_path, mask):
     
     # Exibir as imagens original e detectada lado a lado
     stacked_images = np.hstack((gray_image, detected_lines))
-    cv2.imshow("Original vs Detected Lines", stacked_images)
+    cv2.imshow("Original vs Linhas detectadas", stacked_images)
     
     # Esperar até que uma tecla seja pressionada
     key = cv2.waitKey(0)
@@ -25,39 +25,38 @@ def detect_lines(image_path, mask):
     return True
 
 # Caminho da imagem
-image_path = "implementacoes\images\segmentacao.png"
+image_path = "implementacoes\images\exemplo.jpg"
 
 # Menu de opções
 menu_text = """
-Opções:
 A. Horizontal
 B. Vertical
 C. 45 graus
 D. 135 graus
-Pressione S para sair.
+S. Sair.
 """
 
 while True:
     print(menu_text)
     
     # Solicitar ao usuário que escolha uma opção
-    option = input("Escolha uma opção: ")
+    option = input("Escolha uma opção: ").lower()
     
-    if option == 'S':
+    if option == 's':
         break
     
     # Mapear a opção para a máscara correspondente
     masks = {
-        'A': np.array([[-1, -1, -1],
+        'a': np.array([[-1, -1, -1],
                        [ 2,  2,  2],
                        [-1, -1, -1]]),
-        'B': np.array([[-1, 2,  -1],
+        'b': np.array([[-1, 2,  -1],
                        [-1,  2, -1],
                        [ -1, 2, -1]]),
-        'C': np.array([[-1,  -1, 2],
+        'c': np.array([[-1,  -1, 2],
                        [-1,  2, -1],
                        [2,  -1, -1]]),
-        'D': np.array([[ 2, -1, -1],
+        'd': np.array([[ 2, -1, -1],
                        [-1,  2, -1],
                        [-1, -1,  2]])
     }

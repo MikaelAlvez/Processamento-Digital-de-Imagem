@@ -8,13 +8,13 @@ def threshold_global(image):
 def threshold_local(image, option):
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     
-    if option == 'i':
+    if option == 'I':
         binary_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
-    elif option == 'ii':
+    elif option == 'II':
         binary_image = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-    elif option == 'iii':
+    elif option == 'III':
         _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-    elif option == 'iv':
+    elif option == 'IV':
         n = int(input("Informe o valor de n: "))
         k = float(input("Informe o valor de k: "))
         binary_image = niblack_threshold(gray_image, n, k)
@@ -37,28 +37,29 @@ def niblack_threshold(image, n, k):
     return binary_image
 
 def main():
-    image_path = 'implementacoes\images\segmentacao.png'
+    image_path = 'implementacoes\images\exemplo.jpg'
     image = cv2.imread(image_path)
     
     while True:
-        print("Menu:")
-        print("a. Limiarização Global")
-        print("b. Limiarização Local:")
-        print("   i. Média")
-        print("   ii. Máximo")
-        print("   iii. Mínimo")
-        print("   iv. Niblack")
-        print("s. Sair")
+        print("\nA. Limiarização Global")
+        print("B. Limiarização Local:")
+        print("S. Sair")
         
-        option = input("Selecione uma opção (a-iv, s para sair): ").lower()
+        option = input("Selecione uma opção: ").lower()  # Converter entrada para minúsculas
         
         if option == 's':
             break
         elif option == 'a':
             binary_image = threshold_global(image)
         elif option == 'b':
-            local_option = input("Selecione uma opção (i-iv): ").lower()
-            if local_option in ['i', 'ii', 'iii', 'iv']:
+            print("\nI. Média")
+            print("II. Máximo")
+            print("III. Mínimo")
+            print("IV. Niblack")
+
+            local_option = input("Selecione uma opção: ")  # Converter entrada para minúsculas
+
+            if local_option in ['I', 'II', 'III', 'IV']:
                 binary_image = threshold_local(image, local_option)
             else:
                 print("Opção inválida.")
@@ -68,7 +69,7 @@ def main():
             continue
         
         # Mostrar a imagem resultante
-        cv2.imshow('Limiarização', binary_image)
+        cv2.imshow('Limiarizacao', binary_image)
         key = cv2.waitKey(0)
         
         # Verificar se a tecla pressionada foi "Esc" (27)

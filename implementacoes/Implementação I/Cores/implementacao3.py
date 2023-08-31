@@ -1,3 +1,4 @@
+from bz2 import decompress
 import cv2 as cv
 import sys
 import numpy as np
@@ -36,7 +37,6 @@ def decomporCMYK(cmyk):
 
 def decomporHSV(img):
     h, w, channels = img.shape
-<<<<<<< HEAD
     if channels == 2:
         first = np.zeros_like(img)
         second = np.zeros_like(img)
@@ -119,12 +119,12 @@ if (channels == 1):
     cv.destroyAllWindows()
 elif (channels == 2):
     cv.imshow("Imagem com dois componentes", img)
-    decompor(img)
+    decompress(img)
     cv.waitKey()
     cv.destroyAllWindows()
 elif (channels == 3):
     cv.imshow("Imagem com três componentes", img)
-    decompor(img)
+    cv.decomposeEssentialMat(img)
     # converter
     hsb = cv.cvtColor(img, cv.COLOR_BGR2HSV)
     yuv = cv.cvtColor(img, cv.COLOR_BGR2YUV)
@@ -133,101 +133,20 @@ elif (channels == 3):
     cmyk = bgr_to_cmyk(img)
     cv.imshow("BGR para Gray", gray)
     cv.imshow("BGR para HSB", hsb)
-    decompor(hsb)
+    cv.decomposeEssentialMat(hsb)
     cv.imshow("BGR para CMYK", cmyk)
-    decompor(cmyk)
+    cv.decomposeEssentialMat(cmyk)
     # cv.waitKey(10000)
     # cv.destroyAllWindows()
     cv.imshow("BGR para YUV", yuv)
-    decompor(yuv)
+    cv.decomposeEssentialMat(yuv)
     # cv.waitKey()
     # cv.destroyAllWindows()
 else:
     cv.imshow("Imagem com quatro componentes", img)
-    decompor(img)
+    cv.decomposeEssentialMat(img)
     cv.waitKey(10000)
     cv.destroyAllWindows()
-=======
-    cv.destroyAllWindows()
-    H = np.zeros((h, w))
-    H = img[:, :, 0]
-    S = np.zeros((h, w))
-    S = img[:, :, 1]
-    V = np.zeros((h, w))
-    V = img[:, :, 2]
-    cv.imshow("HSV", img)
-    cv.imshow("H", H)
-    cv.imshow("S", S)
-    cv.imshow("V", V)
-    cv.waitKey()
-    cv.destroyAllWindows()
-
-
-def converterBGR2CMYK(bgr):
-    bgrdash = bgr.astype(np.float64)/255.
-
-    # Calculate K as (1 - whatever is biggest out of Rdash, Gdash, Bdash)
-    K = 1 - np.max(bgrdash, axis=2)
-
-    # Calculate C
-    C = (1-bgrdash[..., 2] - K)/(1-K)
-
-    # Calculate M
-    M = (1-bgrdash[..., 1] - K)/(1-K)
-
-    # Calculate Y
-    Y = (1-bgrdash[..., 0] - K)/(1-K)
-
-    # Combine 4 channels into single image and re-scale back up to uint8
-    CMYK = (np.dstack((C, M, Y, K)) * 255).astype(np.uint8)
-    return CMYK
-
-
-def converterCMYK2BGR(cmyk):
-    cmyk = cmyk / 255
-    R = 255 * (1 - cmyk[:, :, 0]) * (1 - cmyk[:, :, 3])
-    G = 255 * (1 - cmyk[:, :, 1]) * (1 - cmyk[:, :, 3])
-    B = 255 * (1 - cmyk[:, :, 2]) * (1 - cmyk[:, :, 3])
-    bgr = np.dstack((B, G, R)).astype('uint8')
-    return bgr
-
-
-def converterBGR2GRAY(img, tipo=""):
-    h, w, channels = img.shape
-    gray = np.zeros((h, w))
-    if (tipo == "simples"):
-        gray = (img[:, :, 0] * 0.333) + \
-            (img[:, :, 1] * 0.333) + (0.333 * img[:, :, 2])
-        gray = gray.astype("uint8")
-        cv.imshow("gray - solução simples", gray)
-        cv.waitKey()
-        cv.destroyAllWindows()
-    elif (tipo == "NTSC"):
-        gray = (img[:, :, 0] * 0.114) + \
-            (img[:, :, 1] * 0.587) + (0.299 * img[:, :, 2])
-        gray = gray.astype("uint8")
-        cv.imshow("gray - NTSC", gray)
-        cv.waitKey()
-        cv.destroyAllWindows()
-
-
-def decomporYUV(yuv):
-    h, w, channels = yuv.shape
-    Y = np.zeros((h, w))
-    Y = yuv[:, :, 0]
-    U = np.zeros_like(yuv)
-    U[:, :, 0] = yuv[:, :, 1]
-    U[:, :, 1] = yuv[:, :, 0]
-    V = np.zeros_like(yuv)
-    V[:, :, 2] = yuv[:, :, 2]
-    V[:, :, 1] = yuv[:, :, 0]
-    cv.imshow("YUV", yuv)
-    cv.imshow("Y", Y)
-    cv.imshow("U", U)
-    cv.imshow("V", V)
-    cv.waitKey()
-    cv.destroyAllWindows()
->>>>>>> 5838b932a72f77a0a2e930c3cc63851726c555de
 
 
 img = cv.imread(cv.samples.findFile(

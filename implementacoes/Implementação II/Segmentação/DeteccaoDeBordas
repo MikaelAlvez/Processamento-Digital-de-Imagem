@@ -5,66 +5,70 @@ def detect_edges(image_path, option):
     # Carregar a imagem em escala de cinza
     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     
-    if option == 'A':
+    if option == 'a':
         edges = cv2.filter2D(image, -1, np.array([[1, 0], [0, -1]]))
-    elif option == 'B':
+    elif option == 'b':
         edges = cv2.filter2D(image, -1, np.array([[0, 1], [-1, 0]]))
-    elif option == 'C':
+    elif option == 'c':
         edges = cv2.filter2D(image, -1, np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]]))
-    elif option == 'D':
+    elif option == 'd':
         edges = cv2.filter2D(image, -1, np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]]).T)
-    elif option == 'E':
+    elif option == 'e':
         edges_x = cv2.filter2D(image, -1, np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]]))
         edges_y = cv2.filter2D(image, -1, np.array([[-1, -1, -1], [0, 0, 0], [1, 1, 1]]))
         edges = np.sqrt(edges_x ** 2 + edges_y ** 2).astype(np.uint8)
-    elif option == 'F':
+    elif option == 'f':
         edges = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)
-    elif option == 'G':
+    elif option == 'g':
         edges = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)
-    elif option == 'H':
+    elif option == 'h':
         edges_x = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)
         edges_y = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)
         edges = np.sqrt(edges_x ** 2 + edges_y ** 2).astype(np.uint8)
-    elif option == 'I':
+    elif option == 'i':
         edges = cv2.filter2D(image, -1, np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]]))
-    elif option == 'J':
+    elif option == 'j':
         edges = cv2.filter2D(image, -1, np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]))
-    elif option == 'K':
+    elif option == 'k':
         edges = cv2.filter2D(image, -1, np.array([[1, np.sqrt(2), 1], [0, 0, 0], [-1, -np.sqrt(2), -1]]))
-    elif option == 'L':
+    elif option == 'l':
         edges = cv2.Laplacian(image, cv2.CV_64F)
         edges = np.absolute(edges).astype(np.uint8)
-    elif option == 'M':
+    elif option == 'm':
         edges = cv2.filter2D(image, -1, np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]]))
     else:
         return None
     
     # Mostrar a imagem resultante
     cv2.imshow('Detecção de Bordas', edges)
-    cv2.waitKey(0)
+    cv2.waitKey(0)  # Aguardar até que uma tecla seja pressionada
     cv2.destroyAllWindows()
 
 def main():
-    image_path = 'implementacoes\images\segmentacao.png'
+    image_path = 'implementacoes\images\exemplo.jpg'
     
-    print("Menu:")
-    print("a. Roberts")
-    print("b. Roberts cruzado")
-    print("c. Prewitt Gx")
-    print("d. Prewitt Gy")
-    print("e. Prewitt magnitude")
-    print("f. Sobel Gx")
-    print("g. Sobel Gy")
-    print("h. Sobel magnitude")
-    print("i. Krish")
-    print("j. Robison")
-    print("k. Frey-Chen")
-    print("l. Laplaciano")
-    print("m. H1 e H2")
+    while True:
+        print("A. Roberts")
+        print("B. Roberts cruzado")
+        print("C. Prewitt Gx")
+        print("D. Prewitt Gy")
+        print("E. Prewitt magnitude")
+        print("F. Sobel Gx")
+        print("G. Sobel Gy")
+        print("H. Sobel magnitude")
+        print("I. Krish")
+        print("J. Robison")
+        print("K. Frey-Chen")
+        print("L. Laplaciano")
+        print("M. H1 e H2")
+        print("S. para sair")
     
-    option = input("Selecione uma opção (a-l): ").lower()
-    
-    detect_edges(image_path, option)
+        option = input("\nSelecione uma opção: ").lower()
+        
+        if option == 's':
+                break
+        else:
+            detect_edges(image_path, option)
 
 if __name__ == "__main__":
     main()
