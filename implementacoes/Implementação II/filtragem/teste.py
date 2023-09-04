@@ -1,9 +1,9 @@
 import numpy as np
 import cv2 as cv
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 
 img = cv.imread(cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+    "implementacoes\images\lena.pgm"), cv.IMREAD_UNCHANGED)
 
 matriz = np.array([[12, 51, 34, 121], [78, 254, 10, 97], [
                   45, 113, 110, 16], [90, 200, 206, 34]])

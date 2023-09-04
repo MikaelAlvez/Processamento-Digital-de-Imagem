@@ -17,16 +17,16 @@ def detect_isolated_points(image_path, T):
     weighted_diff = np.abs(convolved_image - gray_image)
     
     # Encontrar os pontos isolados acima do limiar
-    isolated_points = (weighted_diff > T).astype(np.uint8) * 255
-    
+    # isolated_points = (weighted_diff > T).astype(np.uint8) * 255
+    isolated_points = (convolved_image > T).astype(np.uint8) * 255
+
     # Exibir as imagens original e modificada lado a lado
     stacked_images = np.hstack((gray_image, isolated_points))
     cv2.imshow("Original vs Modified", stacked_images)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-# Caminho da imagem
-image_path = "implementacoes\images\exemplo.jpg"
+image_path = "implementacoes\images\lena.pgm"
 
 # Solicitar ao usuário que informe o valor de T
 T = int(input("Informe o valor de T: "))

@@ -10,13 +10,13 @@ def detect_edges(image_path, option):
     elif option == 'b':
         edges = cv2.filter2D(image, -1, np.array([[0, 1], [-1, 0]]))
     elif option == 'c':
-        edges = cv2.filter2D(image, -1, np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]]))
-    elif option == 'd':
         edges = cv2.filter2D(image, -1, np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]]).T)
+    elif option == 'd':
+        edges = cv2.filter2D(image, -1, np.array([[-1, -1, -1], [0, 0, 0], [1, 1, 1]]).T)
     elif option == 'e':
-        edges_x = cv2.filter2D(image, -1, np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]]))
-        edges_y = cv2.filter2D(image, -1, np.array([[-1, -1, -1], [0, 0, 0], [1, 1, 1]]))
-        edges = np.sqrt(edges_x ** 2 + edges_y ** 2).astype(np.uint8)
+        edges_x = cv2.filter2D(image, -1, np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]]).T)
+        edges_y = cv2.filter2D(image, -1, np.array([[-1, -1, -1], [0, 0, 0], [1, 1, 1]]).T)
+        edges = (edges_x + edges_y).astype(np.uint8)
     elif option == 'f':
         edges = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)
     elif option == 'g':
@@ -40,12 +40,12 @@ def detect_edges(image_path, option):
         return None
     
     # Mostrar a imagem resultante
-    cv2.imshow('Detecção de Bordas', edges)
+    cv2.imshow('Deteccao de Bordas', edges)
     cv2.waitKey(0)  # Aguardar até que uma tecla seja pressionada
     cv2.destroyAllWindows()
 
 def main():
-    image_path = 'implementacoes\images\exemplo.jpg'
+    image_path = 'implementacoes\images\lena.pgm'
     
     while True:
         print("A. Roberts")

@@ -7,4 +7,4 @@ def pontilhado_ordenado(img):
 
 
 img = cv.imread(cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+    "implementacoes\images\lena.pgm"), cv.IMREAD_UNCHANGED)

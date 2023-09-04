@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Carregue a imagem
-imagem = cv2.imread('implementacoes\images\Captura de tela 2023-09-02 135409.png')
+imagem = cv2.imread('implementacoes\images\lena.pgm')
 imagem_original = imagem.copy()
 
 # Converta a imagem para escala de cinza

@@ -88,8 +88,8 @@ def h1(img):
     h, w = img.shape
     mascara = np.array([[0, -1, 0], [-1, 4, -1], [0, -1, 0]])
     matriz_final = np.zeros_like(img)
-    for x in range(1, h-2):
-        for y in range(1, w-2):
+    for y in range(1, h-2):
+        for x in range(1, w-2):
             matriz_final[x, y] = img[x-1, y-1] * mascara[0, 0] + img[x-1, y] * mascara[0, 1] + img[x-1, y+1] * mascara[0, 2] + img[x, y-1] * mascara[1, 0] + \
                 img[x, y] * mascara[1, 1] + img[x, y+1] * mascara[1, 2] + img[x+1, y-1] * \
                 mascara[2, 0] + img[x+1, y] * mascara[2, 1] + \
@@ -100,10 +100,10 @@ def h1(img):
 
 
 img = cv.imread(cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+    "implementacoes\images\lena.pgm"), cv.IMREAD_UNCHANGED)
 # h1(img)
-h2(img)
+# h2(img)
 # m1(img)
 # m2(img)
 # m3(img)
-high_boost(img)
+# high_boost(img)
