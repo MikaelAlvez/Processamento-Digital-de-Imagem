@@ -316,8 +316,8 @@ def mediana(img):
     # 3x3
     matriz_final = np.zeros_like(img)
     h, w = img.shape
-    for x in range(1, h-2):
-        for y in range(1, w-2):
+    for x in range(1, h-1):
+        for y in range(1, w-1):
             lista = []
             elementos = [img[x - 1, y - 1], img[x - 1, y], img[x-1, y + 1], img[x, y-1],
                          img[x, y], img[x, y+1], img[x+1, y-1], img[x+1, y], img[x+1, y+1]]
@@ -349,9 +349,9 @@ def media(img):
     mask5x5 = np.ones((5, 5), np.float64)/25
     h, w = img.shape
     matriz_final = np.zeros_like(img)  # é a matriz da convolução
-    # 3x3 mediana
-    for x in range(1, h - 2):
-        for y in range(1, w - 2):
+    # 3x3 media
+    for x in range(1, h - 1):
+        for y in range(1, w - 1):
             matriz_final[x, y] = img[x - 1, y - 1] * mask3x3[0, 0] + img[x - 1, y] * mask3x3[0, 1] + img[x-1, y + 1] * mask3x3[0, 2] + img[x, y-1] * mask3x3[1, 0] + \
                 img[x, y] * mask3x3[1, 1] + img[x, y+1] * mask3x3[1, 2] + img[x+1, y-1] * \
                 mask3x3[2, 0] + img[x+1, y] * mask3x3[2, 1] + \
@@ -375,6 +375,7 @@ def media(img):
 
 
 img = cv.imread(cv.samples.findFile(
+<<<<<<< HEAD
     "implementacoes\images\lena.pgm"), cv.IMREAD_UNCHANGED)
 
 media(img)
@@ -389,3 +390,19 @@ cv.destroyAllWindows()
 # tomitaEtsuji(img)
 # nagaoEMatsuyama(img)
 # somboonkaew(img)
+=======
+    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/Lenasalp.pgm"), cv.IMREAD_UNCHANGED)
+
+#media(img)
+cv.destroyAllWindows()
+#mediana(img)
+cv.destroyAllWindows()
+#moda(img)
+cv.destroyAllWindows()
+#maximo(img)
+#minimo(img)
+kuwahara(img)
+#tomitaEtsuji(img)
+#nagaoEMatsuyama(img)
+#somboonkaew(img)
+>>>>>>> c14c763934c278f0fbf6af62454ad9dfa5ebee3a
