@@ -56,9 +56,11 @@ def main():
         print("F. Sobel Gx")
         print("G. Sobel Gy")
         print("H. Sobel magnitude")
-        print("I. Krish")
-        print("J. Robison")
-        print("K. Frey-Chen")
+        ### Ajeitar
+        print("I. Krish") #ok
+        print("J. Robison") #ok
+        print("K. Frey-Chen") #ok
+        ###
         print("L. Laplaciano")
         print("M. H1 e H2")
         print("S. para sair")
