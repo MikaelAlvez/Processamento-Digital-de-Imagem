@@ -37,7 +37,7 @@ def niblack_threshold(image, n, k):
     return binary_image
 
 def main():
-    image_path = 'implementacoes\images\lena.pgm'
+    image_path = 'implementacoes\images\exemplo.jpg'
     image = cv2.imread(image_path)
     
     while True:
