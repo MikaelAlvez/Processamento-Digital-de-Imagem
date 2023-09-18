@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 img = cv.imread(cv.samples.findFile(
-    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
 print(bin(img[0, 0]))
 binary_representation = bin(img[0, 0])[2:]
 print(binary_representation)
@@ -14,12 +14,30 @@ for z in range(7):
     plano = np.zeros_like(img)
     for x in range(h):
         for y in range(w):
-            binario = bin(img[x, y])
             binary_representation = bin(img[x, y])[2:]
-            if (z >= len(binary_representation)):
-                plano[x, y] = 0
+            while(len(binary_representation) != 8):
+                binary_representation = "0" + binary_representation;
+            indiceFinal = len(binary_representation) - 1
+            binary_representation = binary_representation[indiceFinal-z:indiceFinal+1]
+            plano[x,y] = int(binary_representation,2)
+    nome = "Plano " + str(z)
+    cv.imshow(nome, plano)
+cv.waitKey()
+cv.destroyAllWindows()
+
+
+for z in range(7):
+    plano = np.zeros_like(img)
+    for x in range(h):
+        for y in range(w):
+            binary_representation = bin(img[x, y])[2:]
+            while(len(binary_representation) != 8):
+                binary_representation = "0" + binary_representation;
+            tam = len(binary_representation) - 1
+            if(binary_representation[tam-z] == "1"):
+                plano[x,y] = 255
             else:
-                plano[x, y] = int(binary_representation[z]) * (2**z - 1)
+                plano[x,y] = 0
     nome = "Plano " + str(z)
     cv.imshow(nome, plano)
 cv.waitKey()
