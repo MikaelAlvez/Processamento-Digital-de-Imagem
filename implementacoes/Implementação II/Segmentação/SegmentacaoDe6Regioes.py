@@ -1,17 +1,27 @@
 import numpy as np
 import cv2
 
-def region_growing(image, seed):
+def region_growing(image, seed, region_id):
     height, width, channels = image.shape
     visited = np.zeros((height, width), dtype=np.uint8)
     segmented = np.copy(image)
 
     # Defina um limite de intensidade para crescer a região
-    region_threshold = 10
+    region_threshold = 200
 
     # Defina uma pilha para armazenar as coordenadas dos pixels a serem verificados
     stack = []
     stack.append(seed)
+
+    # Defina cores diferentes para cada região
+    colors = [
+        [255, 0, 0],   # Red
+        [0, 255, 0],   # Green
+        [0, 0, 255],   # Blue
+        [255, 255, 0], # Yellow
+        [255, 0, 255], # Magenta
+        [0, 255, 255]  # Cyan
+    ]
 
     # Obtém a intensidade do pixel de semente
     seed_intensity = image[seed[0], seed[1]]
@@ -26,7 +36,7 @@ def region_growing(image, seed):
 
         # Verifique se a intensidade do pixel atual é semelhante à intensidade da semente
         if np.linalg.norm(image[y, x] - seed_intensity) < region_threshold:
-            segmented[y, x] = [255, 170, 0]  # Pseudocolorir o pixel em azul na imagem segmentada
+            segmented[y, x] = colors[region_id % len(colors)]  # Atribuir uma cor à região
             visited[y, x] = 1  # Marcar o pixel como visitado
 
             # Adicione pixels vizinhos à pilha para verificação
@@ -41,31 +51,36 @@ def region_growing(image, seed):
 
     return segmented
 
-image = cv2.imread('implementacoes\images\images.jpg')
+# Carregue uma imagem colorida
+image = cv2.imread('implementacoes\images\lena.pgm')
 
-# Crie uma janela de visualização da imagem
+# Crie uma janela de visualização da imagem original
 cv2.namedWindow('Imagem Original')
 cv2.imshow('Imagem Original', image)
 
-# Aguarde o usuário escolher o valor da semente com um clique do mouse
-print("Clique na imagem para escolher a semente...")
-seed_point = (-1, -1)
+# Aguarde o usuário escolher as sementes com cliques do mouse
+print("Clique em 6 pontos diferentes na imagem para escolher as sementes...")
+
+# Armazene as coordenadas das sementes em uma lista
+seeds = []
 
 def on_mouse_click(event, x, y, flags, param):
-    global seed_point
+    global seeds
 
     if event == cv2.EVENT_LBUTTONDOWN:
-        seed_point = (y, x)
+        seeds.append((y, x))
 
 cv2.setMouseCallback('Imagem Original', on_mouse_click)
 
-while seed_point == (-1, -1):
+while len(seeds) < 6:
     cv2.waitKey(1)
 
-# Aplique o algoritmo de crescimento de região
-segmented_image = region_growing(image, seed_point)
+# Aplique o algoritmo de crescimento de região para cada semente e atribua uma cor diferente
+segmented_image = image.copy()
+for i, seed in enumerate(seeds):
+    segmented_image = region_growing(segmented_image, seed, i)
 
-# Exibir a imagem segmentada com a região em azul
+# Exibir a imagem segmentada com as regiões em cores diferentes
 cv2.imshow('Imagem Segmentada', segmented_image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

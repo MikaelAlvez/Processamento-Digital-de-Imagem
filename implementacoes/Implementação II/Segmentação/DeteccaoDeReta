@@ -14,7 +14,7 @@ def detect_lines(image_path, mask):
     
     # Exibir as imagens original e detectada lado a lado
     stacked_images = np.hstack((gray_image, detected_lines))
-    cv2.imshow("Original vs Linhas detectadas", stacked_images)
+    cv2.imshow("Original vs Linhas detectadas", convolved_image)
     
     # Esperar até que uma tecla seja pressionada
     key = cv2.waitKey(0)
@@ -24,8 +24,7 @@ def detect_lines(image_path, mask):
     
     return True
 
-# Caminho da imagem
-image_path = "implementacoes\images\exemplo.jpg"
+image_path = "implementacoes\images\lena.pgm"
 
 # Menu de opções
 menu_text = """

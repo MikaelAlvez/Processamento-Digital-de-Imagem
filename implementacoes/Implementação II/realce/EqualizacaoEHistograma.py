@@ -14,6 +14,7 @@ plt.xlabel('Nível de Cinza')
 plt.ylabel('Frequência')
 plt.plot(histogram, color='black')
 plt.xlim([0, 255])
+
 plt.show()
 histogram = cv.calcHist([equalized], [0], None, [256], [0, 256])
 histogram = np.squeeze(histogram)

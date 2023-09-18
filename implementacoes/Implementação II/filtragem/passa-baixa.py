@@ -3,6 +3,15 @@ import cv2 as cv
 import math
 import statistics
 
+def variancia_personalizada(data):
+    n = len(data)
+    if n == 0:
+        return 0.0
+
+    media = sum(data) / n
+    soma_diferencas_quadradas = sum((x - media) ** 2 for x in data)
+
+    return soma_diferencas_quadradas / n
 
 def somboonkaew(img):
     matriz_final = np.array(img)
@@ -366,6 +375,22 @@ def media(img):
 
 
 img = cv.imread(cv.samples.findFile(
+<<<<<<< HEAD
+    "implementacoes\images\lena.pgm"), cv.IMREAD_UNCHANGED)
+
+media(img)
+cv.destroyAllWindows()
+# mediana(img)
+# cv.destroyAllWindows()
+# moda(img)
+# cv.destroyAllWindows()
+# maximo(img)
+# minimo(img)
+# kuwahara(img)
+# tomitaEtsuji(img)
+# nagaoEMatsuyama(img)
+# somboonkaew(img)
+=======
     "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/Lenasalp.pgm"), cv.IMREAD_UNCHANGED)
 
 #media(img)
@@ -380,3 +405,4 @@ kuwahara(img)
 #tomitaEtsuji(img)
 #nagaoEMatsuyama(img)
 #somboonkaew(img)
+>>>>>>> c14c763934c278f0fbf6af62454ad9dfa5ebee3a
