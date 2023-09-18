@@ -7,7 +7,7 @@ def region_growth(image, seed):
     segmented = np.copy(image)
 
     # Defina um limite de intensidade para crescer a região
-    region_threshold = 50
+    region_threshold = 70
 
     # Defina uma pilha para armazenar as coordenadas dos pixels a serem verificados
     stack = []
@@ -25,7 +25,8 @@ def region_growth(image, seed):
             continue
 
         # Verifique se a intensidade do pixel atual é semelhante à intensidade da semente
-        if np.linalg.norm(image[y, x] - seed_intensity) < region_threshold:
+        if np.abs(np.linalg.norm(image[y, x] - seed_intensity)) <= 60:
+        # if np.linalg.norm(image[y, x] - seed_intensity) < region_threshold:
             segmented[y, x] = [255, 170, 0]  # Pseudocolorir o pixel em azul na imagem segmentada
             visited[y, x] = 1  # Marcar o pixel como visitado
 
@@ -41,8 +42,8 @@ def region_growth(image, seed):
 
     return segmented
 
-image = cv2.imread('implementacoes\images\exemplo.jpg')
-
+# image = cv2.imread('implementacoes\images\exemplo.jpg')
+image = cv2.imread('implementacoes\images\Captura de tela 2023-09-04 123953.png')
 # Crie uma janela de visualização da imagem
 cv2.namedWindow('Imagem Original')
 cv2.imshow('Imagem Original', image)

@@ -1,13 +1,13 @@
 import numpy as np
 import cv2
 
-def region_growing(image, seed):
+def region_growth(image, seed):
     height, width, channels = image.shape
     visited = np.zeros((height, width), dtype=np.uint8)
     segmented = np.copy(image)
 
     # Defina um limite de intensidade para crescer a região
-    region_threshold = 10
+    region_threshold = 70
 
     # Defina uma pilha para armazenar as coordenadas dos pixels a serem verificados
     stack = []
@@ -25,7 +25,8 @@ def region_growing(image, seed):
             continue
 
         # Verifique se a intensidade do pixel atual é semelhante à intensidade da semente
-        if np.linalg.norm(image[y, x] - seed_intensity) < region_threshold:
+        if np.abs(np.linalg.norm(image[y, x] - seed_intensity)) <= 60:
+        # if np.linalg.norm(image[y, x] - seed_intensity) < region_threshold:
             segmented[y, x] = [255, 170, 0]  # Pseudocolorir o pixel em azul na imagem segmentada
             visited[y, x] = 1  # Marcar o pixel como visitado
 
@@ -41,8 +42,8 @@ def region_growing(image, seed):
 
     return segmented
 
+# image = cv2.imread('implementacoes\images\exemplo.jpg')
 image = cv2.imread('implementacoes\images\Captura de tela 2023-09-04 123953.png')
-
 # Crie uma janela de visualização da imagem
 cv2.namedWindow('Imagem Original')
 cv2.imshow('Imagem Original', image)
@@ -63,7 +64,7 @@ while seed_point == (-1, -1):
     cv2.waitKey(1)
 
 # Aplique o algoritmo de crescimento de região
-segmented_image = region_growing(image, seed_point)
+segmented_image = region_growth(image, seed_point)
 
 # Exibir a imagem segmentada com a região em azul
 cv2.imshow('Imagem Segmentada', segmented_image)
