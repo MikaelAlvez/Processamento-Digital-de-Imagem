@@ -254,7 +254,12 @@ def floydAndSteinberg(img):
             arr[y,x+1] += ((7.0*erro)/16)
             arr[y+1,x-1] += ((3.0*erro)/16)
             arr[y+1,x] += ((5.0*erro)/16)
-            arr[y+1,x+1] += ((1.0*erro)/16)    
+            arr[y+1,x+1] += ((1.0*erro)/16) 
+     for y in range(h):
+        for x in range(w):
+             if(arr[y,x] < 128):
+                  arr[y,x] = 0
+             else: arr[y,x] = 255   
      cv.imshow("Floyd and Steinberg", arr.astype('uint8'))
      cv.waitKey()
 def rogers(img):
@@ -268,6 +273,11 @@ def rogers(img):
             arr[y,x+1] += ((erro * 3.0)/8)
             arr[y+1,x] += ((erro * 3.0)/8)
             arr[y+1,x+1] += ((erro * 2.0)/8)      
+     for y in range(h):
+        for x in range(w):
+             if(arr[y,x] < 128):
+                  arr[y,x] = 0
+             else: arr[y,x] = 255 
      cv.imshow("Rogers", arr.astype('uint8'))
      cv.waitKey()
 def jarvisJudiceNinke(img):
@@ -290,6 +300,11 @@ def jarvisJudiceNinke(img):
             arr[y+2,x] += ((erro * 5.0)/48)
             arr[y+2,x+1] += ((erro * 3.0)/48)
             arr[y+2,x+2] += ((erro * 1.0)/48)
+     for y in range(h):
+        for x in range(w):
+             if(arr[y,x] < 128):
+                  arr[y,x] = 0
+             else: arr[y,x] = 255 
      cv.imshow("Jarvis,Judice & Ninke", arr.astype('uint8'))
      cv.waitKey()
 def stucki(img):
@@ -312,6 +327,11 @@ def stucki(img):
             arr[y+2,x] += ((erro * 4.0)/42)
             arr[y+2,x+1] += ((erro * 2.0)/42)
             arr[y+2,x+2] += ((erro * 1.0)/42)
+     for y in range(h):
+        for x in range(w):
+             if(arr[y,x] < 128):
+                  arr[y,x] = 0
+             else: arr[y,x] = 255 
      cv.imshow("Stucki", arr.astype('uint8'))
      cv.waitKey()
 def stevensonAndArce(img):
@@ -334,13 +354,18 @@ def stevensonAndArce(img):
             arr[y+3,x-1] += ((erro * 12.0)/200)
             arr[y+3,x+1] += ((erro * 12.0)/200)
             arr[y+3,x+3] += ((erro * 5.0)/200)
+     for y in range(h):
+        for x in range(w):
+             if(arr[y,x] < 128):
+                  arr[y,x] = 0
+             else: arr[y,x] = 255 
      cv.imshow("Stevenson and Arce", arr.astype('uint8'))
      cv.waitKey()
 img = cv.imread(cv.samples.findFile(
-    "implementacoes\images\lena.pgm"), cv.IMREAD_UNCHANGED)
-#pontilhado_ordenado2x2(img)
-#pontilhadoOrdenado3x2(img)
-#pontilhadoOrdenado3x3(img)
+    "/home/caiovinicius/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+pontilhado_ordenado2x2(img)
+pontilhadoOrdenado3x2(img)
+pontilhadoOrdenado3x3(img)
 floydAndSteinberg(img)
 rogers(img)
 jarvisJudiceNinke(img)
