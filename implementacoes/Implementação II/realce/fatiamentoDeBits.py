@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 img = cv.imread(cv.samples.findFile(
-    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+    "implementacoes\images\lena.pgm"), cv.IMREAD_UNCHANGED)
 print(bin(img[0, 0]))
 binary_representation = bin(img[0, 0])[2:]
 print(binary_representation)

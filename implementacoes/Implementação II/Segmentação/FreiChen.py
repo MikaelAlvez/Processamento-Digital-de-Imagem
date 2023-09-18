@@ -25,7 +25,6 @@ def apply_freichen_operators(image):
 
     return results
 
-# Carregar a imagem em escala de cinza
 imagem = cv2.imread('implementacoes\images\lena.pgm', cv2.IMREAD_GRAYSCALE)
 
 # Aplicar o operador de Frei-Chen

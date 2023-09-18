@@ -337,7 +337,7 @@ def stevensonAndArce(img):
      cv.imshow("Stevenson and Arce", arr.astype('uint8'))
      cv.waitKey()
 img = cv.imread(cv.samples.findFile(
-    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+    "implementacoes\images\lena.pgm"), cv.IMREAD_UNCHANGED)
 #pontilhado_ordenado2x2(img)
 #pontilhadoOrdenado3x2(img)
 #pontilhadoOrdenado3x3(img)

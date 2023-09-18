@@ -1,13 +1,13 @@
 import numpy as np
 import cv2
 
-def region_growing(image, seed):
+def region_growth(image, seed):
     height, width, channels = image.shape
     visited = np.zeros((height, width), dtype=np.uint8)
     segmented = np.copy(image)
 
     # Defina um limite de intensidade para crescer a região
-    region_threshold = 10
+    region_threshold = 50
 
     # Defina uma pilha para armazenar as coordenadas dos pixels a serem verificados
     stack = []
@@ -41,7 +41,7 @@ def region_growing(image, seed):
 
     return segmented
 
-image = cv2.imread('implementacoes\images\Captura de tela 2023-09-04 123953.png')
+image = cv2.imread('implementacoes\images\exemplo.jpg')
 
 # Crie uma janela de visualização da imagem
 cv2.namedWindow('Imagem Original')
@@ -63,7 +63,7 @@ while seed_point == (-1, -1):
     cv2.waitKey(1)
 
 # Aplique o algoritmo de crescimento de região
-segmented_image = region_growing(image, seed_point)
+segmented_image = region_growth(image, seed_point)
 
 # Exibir a imagem segmentada com a região em azul
 cv2.imshow('Imagem Segmentada', segmented_image)

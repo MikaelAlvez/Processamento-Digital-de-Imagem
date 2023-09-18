@@ -54,7 +54,7 @@ def h1(src):
     cv.imshow("Filtro H1", dst)
     cv.waitKey()
 img = cv.imread(cv.samples.findFile(
-    "/home/caio/repos/pdi/Processamento-Digital-de-Imagem/implementacoes/images/lena.pgm"), cv.IMREAD_UNCHANGED)
+    "implementacoes\images\lena.pgm"), cv.IMREAD_UNCHANGED)
 h1(img)
 h2(img)
 m1(img)

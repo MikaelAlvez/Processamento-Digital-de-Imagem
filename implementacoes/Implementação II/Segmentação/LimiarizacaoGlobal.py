@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-# Carregue a imagem em tons de cinza
 imagem = cv2.imread('implementacoes\images\lena.pgm', cv2.IMREAD_GRAYSCALE)
 
 # Passo 1: Estimar um valor inicial para o limiar
@@ -31,7 +30,6 @@ limiar_final = limiar_atual
 # Aplicar a limiarização final
 imagem_binarizada = (imagem > limiar_final).astype(np.uint8) * 255
 
-# Exiba a imagem binarizada
 cv2.imshow('Limiarizacao global', imagem_binarizada)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
