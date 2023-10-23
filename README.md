@@ -1,5 +1,5 @@
 # Processamento-Digital-de-Imagem
-Implementação de processamento de imagem utilizando Framework Django, atividade com recursos ministrados nas aulas de PDI.
+Implementações da matéria de processamento digital de imagem utilizando recursos de cores, geométricos, lineares, pseudocor, segmentação, filtragem e realce.
 
 python -m venv local
 
